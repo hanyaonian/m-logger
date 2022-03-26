@@ -1,0 +1,23 @@
+{
+  "name": "m-logger",
+  "version": "0.0.1",
+  "description": "logger util. track information by url params!",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.17.0",
+    "eslint": "^8.11.0",
+    "eslint-config-alloy": "^4.5.1",
+    "vite": "^2.8.6"
+  },
+  "keywords": [
+    "logger",
+    "utils",
+    "logger-utils"
+  ],
+  "author": "michaelhan",
+  "license": "ISC"
+}
