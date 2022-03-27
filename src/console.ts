@@ -1,5 +1,4 @@
-import { getQuery } from './utils';
-import { LogLevel, levelColor, levelDesc } from './config';
+import { LogLevel, levelColor, levelDesc, LEVEL } from './config';
 
 export { LogLevel };
 
@@ -8,17 +7,25 @@ export type Config = {
   label?: string,
 }
 
-const LEVEL = LogLevel[getQuery('log')!];
+type Interceptor = (T: {
+  instance: Logger,
+  level: LogLevel,
+}, ...args: any) => void;
 
 export class Logger {
   public static level: LogLevel = LEVEL;
 
   public level?: LogLevel;
   public label?: string;
+  public static interceptors?: Interceptor[] = [];
 
   constructor(config?: Config) {
     this.label = config?.label;
     this.level = config?.level;
+  }
+
+  public static useInterceptor(func: Interceptor) {
+    Logger.interceptors.push(func);
   }
 
   public setLevel(level: LogLevel) {
@@ -31,25 +38,25 @@ export class Logger {
 
   public warn(...args) {
     if (this.match(LogLevel.warn)) {
-      this.formatConsole(args, this.getPrepend(LogLevel.warn));
+      this.formatConsole(args, LogLevel.warn);
     }
   }
 
   public log(...args) {
     if (this.match(LogLevel.all)) {
-      this.formatConsole(args, this.getPrepend(LogLevel.all));
+      this.formatConsole(args, LogLevel.all);
     }
   }
 
   public error(...args) {
     if (this.match(LogLevel.error)) {
-      this.formatConsole(args, this.getPrepend(LogLevel.error));
+      this.formatConsole(args, LogLevel.error);
     }
   }
 
   public info(...args) {
     if (this.match(LogLevel.info)) {
-      this.formatConsole(args, this.getPrepend(LogLevel.info));
+      this.formatConsole(args, LogLevel.info);
     }
   }
 
@@ -71,7 +78,7 @@ export class Logger {
    * @see https://developer.mozilla.org/en-US/docs/Web/API/console#specifications
    * @param args any[]
    */
-  private formatConsole(args: any[], ext: { color: string, prepend: string }) {
+  private formatConsole(args: any[], level: LogLevel) {
     const res = [];
     const strReplacement: Record<string, string> = {
       'string': '%s',
@@ -79,6 +86,15 @@ export class Logger {
       'number': '%d',
     };
 
+    // use Interceptors
+    Logger.interceptors?.forEach(func => {
+      func({
+        instance: this,
+        level: level,
+      }, ...args);
+    });
+
+    const ext = this.getPrepend(level);
     args.forEach(arg => {
       const type = typeof arg;
       res.push(strReplacement[type] || '%s');

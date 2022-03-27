@@ -29,3 +29,18 @@ logger.log(obj);
 logger.info(1, obj);
 logger.warn(1, 2, obj);
 logger.error('you can only see error log');
+
+// use a Interceptor
+const logger1 = new Logger({
+  label: 'error-detect',
+});
+const logger2 = new Logger({
+  label: 'some-module'
+});
+Logger.useInterceptor((config, ...args) => {
+  const { instance, level } = config
+  if (instance.label === 'some-module' && level === LogLevel.error) {
+    logger1.warn('Interceptor get [level-test] error event. do something');
+  }
+});
+logger2.error('some error event;');

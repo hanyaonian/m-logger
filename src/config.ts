@@ -1,3 +1,5 @@
+import { getQuery } from './utils';
+
 export enum LogLevel {
   slient,
   error,
@@ -21,3 +23,5 @@ export const levelDesc: Record<LogLevel, string> = {
   3: '[m-info]',
   4: '[m-log]',
 };
+
+export const LEVEL = LogLevel[getQuery('log')!];
