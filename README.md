@@ -12,11 +12,11 @@ For example: **`{your-web-location}?log=${level}`**.
 
 log level values are below:
 
-- slient: no log (for production)
-- error: only error log
-- warn: includes warning, error
-- info: includes warning, error, info
-- all: includes warning, error, info, log
+- `slient`: no log (for production)
+- `error`: only error log
+- `warn`: includes warning, error
+- `info`: includes warning, error, info
+- `all`: includes warning, error, info, log
 
 - ### create a logger
 
@@ -68,7 +68,29 @@ log level values are below:
   logger.log(obj);          // filtered
   logger.info(1, obj);      // filtered
   logger.warn(1, 2, obj);   // filtered
-  logger.error('you can only see error log');
+  logger.error('after set-lelve, you can only see error log');
+  ```
+
+- ### Use Interceptor
+
+  you can use Interceptor function to get log event.
+
+  ```js
+  const logger1 = new Logger({
+    label: 'interceptor-log',
+  });
+  const logger2 = new Logger({
+    label: 'some-module'
+  });
+  // catch logger event here
+  Logger.useInterceptor((config, ...args) => {
+    const { instance, level } = config
+    // get 'some-module' error-event
+    if (instance.label === 'some-module' && level === LogLevel.error) {
+      logger1.warn('Interceptor get [some-module] error event. do something');
+    }
+  });
+  logger2.error('some error event;');
   ```
 
 ## development

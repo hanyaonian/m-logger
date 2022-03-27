@@ -3,7 +3,7 @@ const { defineConfig } = require('vite')
 
 export default defineConfig({
   server: {
-    open: '/demo/index.html',
+    open: '/demo/index.html?log=all',
   },
   build: {
     target: 'es2018',
