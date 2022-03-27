@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "vite",
+    "prepublish": "vite build",
     "build": "vite build"
   },
   "devDependencies": {

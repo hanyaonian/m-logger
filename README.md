@@ -1,4 +1,4 @@
-# m-logger
+# m-web-logger
 
 A simple logger util for web development.
 
