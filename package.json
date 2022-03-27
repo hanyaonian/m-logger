@@ -1,5 +1,5 @@
 {
-  "name": "m-logger",
+  "name": "m-web-logger",
   "version": "0.0.1",
   "description": "logger util. track information by url params!",
   "main": "dist/index.js",
@@ -14,6 +14,7 @@
     "vite": "^2.8.6"
   },
   "keywords": [
+    "web-logger",
     "logger",
     "utils",
     "logger-utils"

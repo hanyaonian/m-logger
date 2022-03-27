@@ -2,6 +2,12 @@
 
 A simple logger util for web development.
 
+## install
+
+```sh
+npm install m-web-logger
+```
+
 ## basic usage
 
 you can check demo page via `npm run dev`.
@@ -21,7 +27,7 @@ log level values are below:
 - ### create a logger
 
   ```js
-  import Logger, { LogLevel } from 'm-logger';
+  import Logger, { LogLevel } from 'm-web-logger';
   const logger = new Logger();
   // pass label or level to it
   const logger1 = new Logger({
