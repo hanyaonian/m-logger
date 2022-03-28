@@ -17,7 +17,7 @@ export class Logger {
 
   public level?: LogLevel;
   public label?: string;
-  public static interceptors?: Interceptor[] = [];
+  public static interceptors: Interceptor[] = [];
 
   constructor(config?: Config) {
     this.label = config?.label;
@@ -36,25 +36,25 @@ export class Logger {
     this.label = label;
   }
 
-  public warn(...args) {
+  public warn(...args: any[]) {
     if (this.match(LogLevel.warn)) {
       this.formatConsole(args, LogLevel.warn);
     }
   }
 
-  public log(...args) {
+  public log(...args: any[]) {
     if (this.match(LogLevel.all)) {
       this.formatConsole(args, LogLevel.all);
     }
   }
 
-  public error(...args) {
+  public error(...args: any[]) {
     if (this.match(LogLevel.error)) {
       this.formatConsole(args, LogLevel.error);
     }
   }
 
-  public info(...args) {
+  public info(...args: any[]) {
     if (this.match(LogLevel.info)) {
       this.formatConsole(args, LogLevel.info);
     }
@@ -79,7 +79,7 @@ export class Logger {
    * @param args any[]
    */
   private formatConsole(args: any[], level: LogLevel) {
-    const res = [];
+    const res: string[] = [];
     const strReplacement: Record<string, string> = {
       'string': '%s',
       'object': '%o',

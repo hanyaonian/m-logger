@@ -1,8 +1,9 @@
 {
   "name": "m-web-logger",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "logger util. track information by url params!",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
     "prepublish": "vite build",
@@ -10,6 +11,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",
+    "@rollup/plugin-typescript": "^8.3.1",
     "eslint": "^8.11.0",
     "eslint-config-alloy": "^4.5.1",
     "vite": "^2.8.6"

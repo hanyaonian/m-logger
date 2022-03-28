@@ -1,5 +1,6 @@
-const { resolve } = require('path')
-const { defineConfig } = require('vite')
+import typescript from '@rollup/plugin-typescript';
+import { resolve } from 'path';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   server: {
@@ -11,6 +12,7 @@ export default defineConfig({
     rollupOptions: {
       input: resolve(__dirname, 'src/index.ts'),
       output: {
+        dir: 'dist',
         format: 'esm',
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
@@ -18,6 +20,9 @@ export default defineConfig({
       },
       /** @see link https://rollupjs.org/guide/en/#preserveentrysignatures */
       preserveEntrySignatures: 'strict',
+      plugins: [
+        typescript({ tsconfig: './tsconfig.json' }),
+      ]
     }
   },
 })

@@ -27,7 +27,7 @@ log level values are below:
 - ### create a logger
 
   ```js
-  import Logger, { LogLevel } from 'm-web-logger';
+  import { Logger, LogLevel } from 'm-web-logger';
   const logger = new Logger();
   // pass label or level to it
   const logger1 = new Logger({

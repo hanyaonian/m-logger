@@ -1,4 +1,4 @@
-import Logger, { LogLevel } from '../src/index';
+import { Logger, LogLevel } from '../src/index';
 
 // swtich value
 const select = document.getElementById('select') as HTMLSelectElement;
