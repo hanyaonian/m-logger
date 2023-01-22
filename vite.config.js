@@ -7,13 +7,14 @@ export default defineConfig({
     open: '/demo/index.html?log=all',
   },
   build: {
-    target: 'es2018',
-    minify: false,
+    target: 'modules',
+    minify: true,
     rollupOptions: {
       input: resolve(__dirname, 'src/index.ts'),
       output: {
         dir: 'dist',
-        format: 'esm',
+        format: 'umd',
+        name: 'index.js',
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
         assetFileNames: '[name].[ext]'
