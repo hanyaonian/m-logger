@@ -9,19 +9,19 @@ export enum LogLevel {
 }
 
 export const levelColor: Record<LogLevel, string> = {
-  0: '',
-  1: 'red',
-  2: 'orange',
-  3: 'skyblue',
-  4: 'gray',
+  [LogLevel.slient]: '',
+  [LogLevel.error]: 'red',
+  [LogLevel.warn]: 'orange',
+  [LogLevel.info]: 'skyblue',
+  [LogLevel.all]: 'gray',
 };
 
 export const levelDesc: Record<LogLevel, string> = {
-  0: '',
-  1: '[m-error]',
-  2: '[m-warn]',
-  3: '[m-info]',
-  4: '[m-log]',
+  [LogLevel.slient]: '',
+  [LogLevel.error]: '[m-error]',
+  [LogLevel.warn]: '[m-warn]',
+  [LogLevel.info]: '[m-info]',
+  [LogLevel.all]: '[m-log]',
 };
 
 export const LEVEL = LogLevel[getQuery('log')!];
