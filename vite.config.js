@@ -14,7 +14,7 @@ export default defineConfig({
       output: {
         dir: 'dist',
         format: 'umd',
-        name: 'index.js',
+        name: 'MLogger',
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
         assetFileNames: '[name].[ext]'

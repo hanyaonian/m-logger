@@ -27,9 +27,16 @@ log level values are below:
 - ### create a logger
 
   ```js
+  // es module
   import { Logger, LogLevel } from 'm-web-logger';
+
+  // umd from browser window
+  const { MLogger } = window;
+  const { Logger, LogLevel } = MLogger;
+
+  // default usage
   const logger = new Logger();
-  // pass label or level to it
+  // or pass label or level to it
   const logger1 = new Logger({
     label: 'some-module',
     level: LogLevel.warn,

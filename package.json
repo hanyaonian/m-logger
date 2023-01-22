@@ -1,6 +1,6 @@
 {
   "name": "m-web-logger",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "logger util. track information by url params!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
