@@ -70,16 +70,6 @@ log level values are below:
   logger.error(1, 2, 3, obj);
   ```
 
-- ### setting filter for tracings
-
-  you can use a filter to find messsages in your log
-
-  ```js
-  // in URL queries, setting `log_filter`, eg: https://localhost:3000?log_filter="hello"
-  // or
-  logger.setFilter('hello');
-  ```
-
 - ### setting level for filter
 
   you can change `log` url params or use `setLevel` method to filter log information.
