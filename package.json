@@ -1,8 +1,9 @@
 {
   "name": "m-web-logger",
   "version": "0.1.2",
-  "description": "logger util. track information by url params!",
-  "main": "dist/index.js",
+  "description": "logger util for web browser",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
@@ -11,16 +12,16 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",
-    "@rollup/plugin-typescript": "^8.3.1",
-    "eslint": "^8.11.0",
-    "eslint-config-alloy": "^4.5.1",
-    "vite": "^2.8.6"
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@types/node": "^20.1.0",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.40.0",
+    "vite": "^4.3.5"
   },
   "keywords": [
-    "web-logger",
     "logger",
-    "utils",
-    "logger-utils"
+    "web-logger",
+    "logger utils"
   ],
   "author": "michaelhan",
   "license": "ISC"

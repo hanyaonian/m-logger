@@ -1,6 +1,4 @@
-import { LogLevel, levelColor, levelDesc, LEVEL } from './config';
-
-export { LogLevel };
+import { LogLevel, levelColor, levelDesc, DEFAULT_LEVEL } from './config';
 
 export type Config = {
   level?: LogLevel,
@@ -13,15 +11,13 @@ type Interceptor = (T: {
 }, ...args: any) => void;
 
 export class Logger {
-  public static level: LogLevel = LEVEL;
-
   public level?: LogLevel;
   public label?: string;
   public static interceptors: Interceptor[] = [];
 
   constructor(config?: Config) {
     this.label = config?.label;
-    this.level = config?.level;
+    this.level = config?.level ?? DEFAULT_LEVEL;
   }
 
   public static useInterceptor(func: Interceptor) {
@@ -71,7 +67,7 @@ export class Logger {
     if (this.level) {
       return this.level >= lv;
     }
-    return LEVEL >= lv;
+    return DEFAULT_LEVEL >= lv;
   }
 
   /**
