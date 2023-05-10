@@ -2,6 +2,9 @@
 
 A simple logger util for web development.
 
+> **Note** :speech_balloon:
+> Version from 0.2.0 use `decorators`, which increases package size but **No change** in functionality
+
 ## install
 
 ```sh

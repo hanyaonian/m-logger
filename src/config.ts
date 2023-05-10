@@ -24,4 +24,5 @@ export const levelDesc: Record<LogLevel, string> = {
   [LogLevel.all]: '[m-log]',
 };
 
+// @ts-ignore
 export const DEFAULT_LEVEL = LogLevel[getQuery('log')!];

@@ -1,4 +1,5 @@
 import { LogLevel, levelColor, levelDesc, DEFAULT_LEVEL } from './config';
+import { validate, required, match } from './decorators';
 
 export type Config = {
   level?: LogLevel,
@@ -32,28 +33,28 @@ export class Logger {
     this.label = label;
   }
 
-  public warn(...args: any[]) {
-    if (this.match(LogLevel.warn)) {
-      this.formatConsole(args, LogLevel.warn);
-    }
+  @match(LogLevel.warn)
+  @validate
+  public warn(@required ...args: any[]) {
+    this.formatConsole(args, LogLevel.warn);
   }
 
-  public log(...args: any[]) {
-    if (this.match(LogLevel.all)) {
-      this.formatConsole(args, LogLevel.all);
-    }
+  @match(LogLevel.all)
+  @validate
+  public log(@required ...args: any[]) {
+    this.formatConsole(args, LogLevel.all);
   }
 
-  public error(...args: any[]) {
-    if (this.match(LogLevel.error)) {
-      this.formatConsole(args, LogLevel.error);
-    }
+  @match(LogLevel.error)
+  @validate
+  public error(@required ...args: any[]) {
+    this.formatConsole(args, LogLevel.error);
   }
 
-  public info(...args: any[]) {
-    if (this.match(LogLevel.info)) {
-      this.formatConsole(args, LogLevel.info);
-    }
+  @match(LogLevel.info)
+  @validate
+  public info(@required ...args: any[]) {
+    this.formatConsole(args, LogLevel.info);
   }
 
   private getPrepend(level: LogLevel) {

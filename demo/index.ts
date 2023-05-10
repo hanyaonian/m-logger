@@ -19,6 +19,11 @@ logger.error(1, 2, 3, 4);
 
 // object log
 const obj = { a: 'hello world' };
+try {
+  logger.warn();
+} catch (err) {
+  logger.warn('got an error captured by decorator: \n', err);
+}
 logger.log(obj);
 logger.info(1, obj);
 logger.warn(1, 2, obj);

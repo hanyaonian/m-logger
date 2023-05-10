@@ -6,8 +6,9 @@
     "noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,
     "noImplicitReturns": true /* prevents you from forgetting to return at the end of a function. */,
     "skipLibCheck": true,
-    "suppressImplicitAnyIndexErrors": true,
     "declaration": true,
+    "target": "ES5",
+    "experimentalDecorators": true
   },
   "include": ["./src"],
   "exclude": ["**/node_modules", "./dist/**/*"]
