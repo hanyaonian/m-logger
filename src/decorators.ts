@@ -9,7 +9,8 @@ export function required(
   propertyKey: string | symbol,
   parameterIndex: number
 ) {
-  let existingRequiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, propertyKey) || [];
+  let existingRequiredParameters: number[] =
+    Reflect.getOwnMetadata(requiredMetadataKey, target, propertyKey) || [];
   existingRequiredParameters.push(parameterIndex);
   Reflect.defineMetadata(
     requiredMetadataKey,
@@ -17,25 +18,6 @@ export function required(
     target,
     propertyKey
   );
-}
-
-export function match(level: LogLevel) {
-  return function(target: Logger, _propertyName: string, descriptor: TypedPropertyDescriptor<(...args: any[]) => void>) {
-    let result;
-    let method = descriptor.value;
-    descriptor.value = function(...args: any[]) {
-      if (target.level) {
-        result = target.level >= level;
-      } else {
-        result = DEFAULT_LEVEL >= level;
-      }
-      if (result) {
-        return method?.apply(this, args);
-      }
-      // level not matched
-      return () => {};
-    }
-  }
 }
 
 export function validate(
@@ -56,11 +38,36 @@ export function validate(
           parameterIndex >= arguments.length ||
           arguments[parameterIndex] === undefined
         ) {
-          throw new Error(`Missing required argument in function ${propertyName}.`);
+          throw new Error(
+            `Missing required argument in function ${propertyName}.`
+          );
         }
       }
     }
 
     return method?.apply(this, args);
+  };
+}
+
+export function match(level: LogLevel) {
+  return function (
+    target: Logger,
+    _propertyName: string,
+    descriptor: TypedPropertyDescriptor<(...args: any[]) => void>
+  ) {
+    let result;
+    let method = descriptor.value;
+    descriptor.value = function (...args: any[]) {
+      if (target.level) {
+        result = target.level >= level;
+      } else {
+        result = DEFAULT_LEVEL >= level;
+      }
+      if (result) {
+        return method?.apply(this, args);
+      }
+      // level not matched
+      return () => { };
+    };
   };
 }

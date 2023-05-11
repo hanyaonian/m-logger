@@ -1,6 +1,6 @@
 # m-web-logger
 
-A simple logger util for web development.
+A simple logger util for web development. (btw, I found ChatGPT can easily do better than this, T T)
 
 > **Note** :speech_balloon:
 > Version from 0.2.0 use `decorators`, which increases package size but **No change** in functionality
