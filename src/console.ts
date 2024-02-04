@@ -1,15 +1,18 @@
-import { LogLevel, levelColor, levelDesc, DEFAULT_LEVEL } from './config';
-import { validate, required, match } from './decorators';
+import { LogLevel, LOG_COLOR, LOG_DESC, DEFAULT_LEVEL } from "./config";
+import { validate, required, match } from "./decorators";
 
 export type Config = {
-  level?: LogLevel,
-  label?: string,
-}
+  level?: LogLevel;
+  label?: string;
+};
 
-type Interceptor = (T: {
-  instance: Logger,
-  level: LogLevel,
-}, ...args: any) => void;
+type Interceptor = (
+  T: {
+    instance: Logger;
+    level: LogLevel;
+  },
+  ...args: any
+) => void;
 
 export class Logger {
   public level?: LogLevel;
@@ -59,16 +62,9 @@ export class Logger {
 
   private getPrepend(level: LogLevel) {
     return {
-      prepend: this.label ? `${levelDesc[level]}-[${this.label}]` : levelDesc[level],
-      color: levelColor[level],
-    }
-  }
-
-  private match(lv: LogLevel): boolean {
-    if (this.level) {
-      return this.level >= lv;
-    }
-    return DEFAULT_LEVEL >= lv;
+      prepend: this.label ? `[${this.label}]-${LOG_DESC[level]}` : LOG_DESC[level],
+      color: LOG_COLOR[level],
+    };
   }
 
   /**
@@ -78,24 +74,27 @@ export class Logger {
   private formatConsole(args: any[], level: LogLevel) {
     const res: string[] = [];
     const strReplacement: Record<string, string> = {
-      'string': '%s',
-      'object': '%o',
-      'number': '%d',
+      string: "%s",
+      object: "%o",
+      number: "%d",
     };
 
     // use Interceptors
-    Logger.interceptors?.forEach(func => {
-      func({
-        instance: this,
-        level: level,
-      }, ...args);
+    Logger.interceptors?.forEach((func) => {
+      func(
+        {
+          instance: this,
+          level: level,
+        },
+        ...args
+      );
     });
 
     const ext = this.getPrepend(level);
-    args.forEach(arg => {
+    args.forEach((arg) => {
       const type = typeof arg;
-      res.push(strReplacement[type] || '%s');
+      res.push(strReplacement[type] || "%s");
     });
-    console.log(`%c${ext.prepend}: ${res.join(' ')}`, `color: ${ext.color}`, ...args);
+    console.log(`%c${ext.prepend}: ${res.join(" ")}`, `color: ${ext.color}`, ...args);
   }
 }
