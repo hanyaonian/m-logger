@@ -2,15 +2,29 @@
 
 use `Decorators` in TypeScript 5.0 to replace `reflect-metadata`
 
-[proposal link](https://github.com/tc39/proposal-decorators)
-[ts 5.0 link](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#decorators)
+- tc39 [proposal link](https://github.com/tc39/proposal-decorators)
 
-## Types
+- new [TypeScript 5.0](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#decorators)
+- old [Experimental Decorators](https://www.typescriptlang.org/docs/handbook/decorators.html)
 
-Genaral Type
+## Genaral Type 5.0
 
 ```ts
-export type Decorator = (
+// @see lib.decorators.d
+type ClassMemberDecoratorContext =
+  | ClassMethodDecoratorContext
+  | ClassGetterDecoratorContext
+  | ClassSetterDecoratorContext
+  | ClassFieldDecoratorContext
+  | ClassAccessorDecoratorContext;
+
+type DecoratorContext = ClassDecoratorContext | ClassMemberDecoratorContext;
+```
+
+All decorators become like:
+
+```ts
+type XXDecoratorContext = (
   value: any,
   context: {
     kind: "class" | "getter" | "method" | "setter" | "field" | "accessor";
@@ -25,9 +39,3 @@ export type Decorator = (
   }
 ) => any | void;
 ```
-
-## Issues
-
-- while using tsx: [esbuild Error]: Transforming JavaScript decorators to the configured target environment ("node18.19.0") is not supported yet
-
-## End

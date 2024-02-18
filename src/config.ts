@@ -1,4 +1,4 @@
-import { getQuery } from "./utils";
+import { getEnv } from "./utils";
 
 export enum LogLevel {
   all,
@@ -7,6 +7,16 @@ export enum LogLevel {
   error,
   slient,
 }
+
+export const END_ANSI = "\x1B[0m";
+
+export const NODE_LOG_ANSI: Record<LogLevel, string> = {
+  [LogLevel.slient]: "",
+  [LogLevel.error]: "\x1B[31m",
+  [LogLevel.warn]: "\x1B[33m",
+  [LogLevel.info]: "\x1B[34m",
+  [LogLevel.all]: "\x1B[32m",
+};
 
 export const LOG_COLOR: Record<LogLevel, string> = {
   [LogLevel.slient]: "",
@@ -24,4 +34,4 @@ export const LOG_DESC: Record<LogLevel, string> = {
   [LogLevel.all]: "[log]",
 };
 
-export const DEFAULT_LEVEL = LogLevel[getQuery("log") as keyof typeof LogLevel] || LogLevel.all;
+export const DEFAULT_LEVEL = LogLevel[getEnv("log") as keyof typeof LogLevel] ?? LogLevel.slient;

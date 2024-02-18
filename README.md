@@ -1,9 +1,8 @@
 # m-web-logger
 
-A simple logger util for web development. (btw, I found ChatGPT can easily do better than this, T T)
+A simple logger util for browser/nodejs development. It's a practice for decorators(experimental) in TypeScript.
 
-> **Note** :speech_balloon:
-> Version from 0.2.0 use `decorators`, which increases package size but **No change** in functionality
+(btw, I found ChatGPT can easily do better than this, T T)
 
 ## install
 
@@ -11,13 +10,9 @@ A simple logger util for web development. (btw, I found ChatGPT can easily do be
 npm install m-web-logger
 ```
 
-## basic usage
+## Log types & default setting
 
-you can check demo page via `npm run dev`.
-
-m-logger has 5 level, you can pass it via url params, default is **`slient`**.
-
-For example: **`{your-web-location}?log=${level}`**.
+m-logger has 5 levels, you can pass it by url params or by node argv, default is **slient**.
 
 log level values are below:
 
@@ -26,6 +21,33 @@ log level values are below:
 - `warn`: includes warning, error
 - `info`: includes warning, error, info
 - `all`: includes warning, error, info, log
+
+### Browser setting
+
+you can check browser demo by `npm run dev`.
+
+browser's log setting is controlled by url query parameter `log`.
+
+For example: **{your-web-location}?log=${level}**. you can change default level by change `level`
+
+### Nodejs setting
+
+you can check Nodejs demo by `npm run test`.
+
+Node.js's log setting is controlled by `process.env` or `process.argv`
+
+For example:
+
+```sh
+set log=${level}
+node your_script.js
+
+# or
+
+node your_script.js --log=${level}
+```
+
+## basic usage
 
 - ### create a logger
 
@@ -112,7 +134,11 @@ log level values are below:
 ## development
 
 ```sh
+# for browser
 npm run dev
+
+# for nodejs, example
+npm run test -- --log=error
 ```
 
 ## build

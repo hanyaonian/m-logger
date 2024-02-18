@@ -1,3 +1,2 @@
-export { Logger as default } from "./console";
-export { Logger } from "./console";
+export { Logger } from "./logger";
 export { LogLevel } from "./config";

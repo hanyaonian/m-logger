@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
-    "sourceMap": true /* Generates corresponding '.map' file. */,
-    "outDir": "./dist" /* Redirect output structure to the directory. */,
-    "strict": true /* Enable all strict type-checking options. */,
-    "noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,
-    "noImplicitReturns": true /* prevents you from forgetting to return at the end of a function. */,
-    "skipLibCheck": true,
+    "strict": true,
+    "sourceMap": true,
+    "outDir": "./dist",
     "declaration": true,
     "target": "ES5",
     "experimentalDecorators": true
