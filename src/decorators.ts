@@ -13,7 +13,7 @@ export function validate(
   propertyName: string,
   descriptor: TypedPropertyDescriptor<(...args: any[]) => void>
 ) {
-  let method = descriptor.value;
+  const method = descriptor.value;
   descriptor.value = function (this: Logger, ...args: any[]) {
     if (!args?.length) {
       throw new Error(`Missing required argument in function ${propertyName}.`);
@@ -22,18 +22,18 @@ export function validate(
   };
 }
 
-export function use(method_level: LogLevel) {
+export function use(level: LogLevel) {
   return function (
     _target: Logger,
     _propertyName: string,
     descriptor: TypedPropertyDescriptor<(...args: any[]) => void>
   ) {
-    let method = descriptor.value;
+    const method = descriptor.value;
     descriptor.value = function (this: Logger, ...args: any[]) {
-      const cur_level = this.level ?? DEFAULT_LEVEL;
-      if (cur_level <= method_level) {
-        this.toConsole(method_level, Array.from(arguments));
-        this.useInterceptor(method_level, Array.from(arguments));
+      const minLevel = this.level ?? DEFAULT_LEVEL;
+      if (minLevel <= level) {
+        this.toConsole(level, args);
+        this.useInterceptor(level, args);
         return method?.apply(this, args);
       }
       return null;
