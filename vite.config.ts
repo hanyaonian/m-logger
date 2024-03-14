@@ -7,12 +7,12 @@ export default defineConfig({
     open: "/demo/index.html?log=all",
   },
   build: {
-    target: "modules",
     minify: true,
     emptyOutDir: true,
     lib: {
       name: "MLogger",
       fileName: "index",
+      formats: ["es", "umd"],
       entry: resolve(__dirname, "src/index.ts"),
     },
     rollupOptions: {
