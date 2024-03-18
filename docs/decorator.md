@@ -1,6 +1,6 @@
 # Decorator
 
-use `Decorators` in TypeScript 5.0 to replace `reflect-metadata`
+use `Decorators` in TypeScript 5.0
 
 - tc39 [proposal link](https://github.com/tc39/proposal-decorators)
 
