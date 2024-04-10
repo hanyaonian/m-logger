@@ -1,4 +1,4 @@
-import { DEFAULT_LEVEL, LogLevel } from "./config";
+import { DEFAULT_LEVEL, LABEL_FILTER, LogLevel } from "./config";
 import { Logger } from "./logger";
 
 /**
@@ -30,8 +30,10 @@ export function use(level: LogLevel) {
   ) {
     const method = descriptor.value;
     descriptor.value = function (this: Logger, ...args: any[]) {
-      const minLevel = this.level ?? DEFAULT_LEVEL;
-      if (minLevel <= level) {
+      const hasLabelFilter = Boolean(LABEL_FILTER);
+      const matchLevel = (this.level ?? DEFAULT_LEVEL) <= level;
+      const matchLabel = LABEL_FILTER === this.label;
+      if ((matchLevel && !hasLabelFilter) || (matchLevel && matchLabel)) {
         this.toConsole(level, args);
         this.useInterceptor(level, args);
         return method?.apply(this, args);

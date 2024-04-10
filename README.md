@@ -22,13 +22,19 @@ log level values are below:
 - `info`: includes warning, error, info
 - `all`: includes warning, error, info, log
 
+you can also change the level by setting each logger instance, or use label filter.
+
+Priority comparison: label filter > instance's level > default log level
+
 ### Browser setting
 
 you can check browser demo by `npm run dev`.
 
-browser's log setting is controlled by url query parameter `log`.
+browser's log level setting is controlled by url query parameter `log_level`.
 
-For example: **{your-web-location}?log=${level}**. you can change default level by change `level`
+For example: **{your-web-location}?log_level=${level}**. you can change default level by change `level`
+
+you can also filter log info by `label_filter`
 
 ### Nodejs setting
 
@@ -39,12 +45,13 @@ Node.js's log setting is controlled by `process.env` or `process.argv`
 For example:
 
 ```sh
-set log=${level}
+set label_filter=${label}
+set log_level=${level}
 node your_script.js
 
 # or
-
-node your_script.js --log=${level}
+node your_script.js --label_filter=${label}
+node your_script.js --log_level=${level}
 ```
 
 ## basic usage

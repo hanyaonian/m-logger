@@ -1,9 +1,11 @@
 import { Logger, LogLevel } from "../src/index";
 
 const logger = new Logger();
+const labelLogger = new Logger({ label: "test" });
 
 // basic usage
-logger.log(1);
+logger.info(() => {});
+logger.log(1.1);
 logger.info(1, 2);
 logger.warn(1, 2, 3);
 logger.error(1, 2, 3, 4);
@@ -49,3 +51,9 @@ Logger.useInterceptor((config, ...args) => {
   }
 });
 logger2.error("some error event;");
+
+/**
+ * Supposed not to see any log except
+ * label_filter=labeltest
+ */
+labelLogger.log("Supposed not to see any log except label_filter=test");

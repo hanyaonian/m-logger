@@ -4,7 +4,7 @@ import typescript from "@rollup/plugin-typescript";
 
 export default defineConfig({
   server: {
-    open: "/demo/index.html?log=all",
+    open: "/demo/index.html?log_level=all",
   },
   build: {
     minify: true,

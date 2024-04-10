@@ -34,4 +34,6 @@ export const LOG_DESC: Record<LogLevel, string> = {
   [LogLevel.all]: "[log]",
 };
 
-export const DEFAULT_LEVEL = LogLevel[getEnv("log") as keyof typeof LogLevel] ?? LogLevel.slient;
+export const DEFAULT_LEVEL =
+  LogLevel[getEnv("log_level") as keyof typeof LogLevel] ?? LogLevel.slient;
+export const LABEL_FILTER = getEnv("label_filter");

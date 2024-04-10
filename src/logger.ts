@@ -82,17 +82,18 @@ export class Logger {
   }
 
   public toConsole(level: LogLevel, args: any[]) {
+    /** @see {link https://console.spec.whatwg.org/#log} */
     const logReplacement: Record<string, string> = {
       string: "%s",
       object: "%o",
-      number: "%d",
+      number: "%f",
+      function: "%O",
     };
     const color = this.getColor(level);
     const prepend = this.getPrepend(level);
     const res: string[] = [];
     args.forEach((arg) => {
-      const type = typeof arg;
-      res.push(logReplacement[type] || "%s");
+      res.push(logReplacement[typeof arg] ?? "%s");
     });
 
     if (env === "browser") {
