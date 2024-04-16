@@ -1,4 +1,4 @@
-# Decorator
+# Decorator doc
 
 use `Decorators` in TypeScript 5.0
 

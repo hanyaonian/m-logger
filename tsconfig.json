@@ -6,5 +6,6 @@
     "declaration": true,
     "experimentalDecorators": true
   },
+  "exclude": ["dist"],
   "include": ["src"]
 }

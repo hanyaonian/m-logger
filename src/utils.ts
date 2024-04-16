@@ -24,7 +24,7 @@ const getArgv = (key: string) => {
 };
 
 export const env = (function () {
-  if (typeof exports !== "undefined") {
+  if (typeof exports !== "undefined" && typeof module !== "undefined" && module.exports) {
     return "node";
   } else {
     return "browser";
