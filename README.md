@@ -1,6 +1,6 @@
 # m-web-logger
 
-A simple logger util for browser/nodejs development. It's a practice for decorators(experimental) in TypeScript.
+A simple log tracer for browser development. It's a practice for decorators(experimental) in TypeScript.
 
 (btw, I found ChatGPT can easily do better than this, T T)
 
@@ -10,9 +10,9 @@ A simple logger util for browser/nodejs development. It's a practice for decorat
 npm install m-web-logger
 ```
 
-## Log types & default setting
+## log types & default setting
 
-m-logger has 5 levels, you can pass it by url params or by node argv, default is **slient**.
+m-logger has 5 levels, you can pass it by url params, default is **slient**. If the reported info's level is weaker than level you set, it would be ignored.
 
 log level values are below:
 
@@ -36,25 +36,13 @@ For example: **{your-web-location}?log_level=${level}**. you can change default 
 
 you can also filter log info by `label_filter`
 
-### Nodejs setting
-
-you can check Nodejs demo by `npm run test`.
-
-Node.js's log setting is controlled by `process.env` or `process.argv`
-
-For example:
-
-```sh
-set label_filter=${label}
-set log_level=${level}
-node your_script.js
-
-# or
-node your_script.js --label_filter=${label}
-node your_script.js --log_level=${level}
-```
-
 ## basic usage
+
+A web-logger contains 2 default functions, and other similar custom functions you want:
+
+- Console (log your info into browser's developer console)
+- Tracer (saved in browser's indexeddb, todo)
+- custom plugins, extends BaseLogger.
 
 - ### create a logger
 
@@ -104,7 +92,7 @@ node your_script.js --log_level=${level}
 
 - ### setting level for filter
 
-  you can change `log` url params or use `setLevel` method to filter log information.
+  you can change `log_level` url params or use `setLevel` method to filter log information.
 
   ```js
   // change the url params log to `error`
@@ -129,9 +117,9 @@ node your_script.js --log_level=${level}
   });
   // catch logger event here
   Logger.useInterceptor((config, ...args) => {
-    const { instance, level } = config;
+    const { instance, log_level } = config;
     // get 'some-module' error-event
-    if (instance.label === "some-module" && level === LogLevel.error) {
+    if (instance.label === "some-module" && log_level === LogLevel.error) {
       logger1.warn("Interceptor get [some-module] error event. do something");
     }
   });
@@ -143,9 +131,6 @@ node your_script.js --log_level=${level}
 ```sh
 # for browser
 npm run dev
-
-# for nodejs, example
-npm run test -- --log=error
 ```
 
 ## build

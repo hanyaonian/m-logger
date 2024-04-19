@@ -1,28 +1,20 @@
-import { LogLevel, LOG_COLOR, LOG_DESC, DEFAULT_LEVEL, END_ANSI, NODE_LOG_ANSI } from "./config";
-import { validate, use } from "./decorators";
-import { env } from "./utils";
+import { LogLevel } from "./config";
+import { usePlugins, useInterceptor } from "./utils";
+import { Config, BaseLogger, Interceptor } from "./base";
+// default plugins
+import { Console } from "./console";
 
-export type Config = {
-  level?: LogLevel;
-  label?: string;
-};
-
-type Interceptor = (
-  T: {
-    instance: Logger;
-    level: LogLevel;
-  },
-  args: any[]
-) => void;
-
-export class Logger {
-  public level?: LogLevel;
-  public label?: string;
-  public static interceptors: Interceptor[] = [];
+export class Logger extends BaseLogger {
+  public plugins: BaseLogger[] = [];
+  private static interceptors: Interceptor[] = [];
 
   constructor(config?: Config) {
-    this.label = config?.label;
-    this.level = config?.level ?? DEFAULT_LEVEL;
+    super(config);
+    this.use(new Console(config));
+  }
+
+  public use(plugin: BaseLogger) {
+    this.plugins.push(plugin);
   }
 
   public static useInterceptor(func: Interceptor) {
@@ -36,76 +28,37 @@ export class Logger {
     }
   }
 
-  public setLevel(level: LogLevel) {
-    this.level = level;
-  }
+  @usePlugins()
+  public setLevel(_level: LogLevel) {}
 
-  public setLabel(label?: string) {
-    this.label = label;
-  }
+  @usePlugins()
+  public setLabel(_label?: string) {}
 
-  @validate
-  @use(LogLevel.warn)
+  @usePlugins()
+  @useInterceptor(LogLevel.warn)
   public warn(..._: any[]) {}
 
-  @validate
-  @use(LogLevel.all)
+  @usePlugins()
+  @useInterceptor(LogLevel.all)
   public log(..._: any[]) {}
 
-  @validate
-  @use(LogLevel.error)
+  @usePlugins()
+  @useInterceptor(LogLevel.error)
   public error(..._: any[]) {}
 
-  @validate
-  @use(LogLevel.info)
+  @usePlugins()
+  @useInterceptor(LogLevel.info)
   public info(..._: any[]) {}
-
-  public getPrepend(level: LogLevel) {
-    return this.label ? `[${this.label}]-${LOG_DESC[level]}` : LOG_DESC[level];
-  }
-
-  public getColor(level: LogLevel) {
-    return env === "browser" ? LOG_COLOR[level] : NODE_LOG_ANSI[level];
-  }
 
   public useInterceptor(level: LogLevel, args: any[]) {
     // use Interceptors
     Logger.interceptors?.forEach((func) => {
       func(
-        {
-          instance: this,
-          level: level,
-        },
+        Object.assign({}, this.config, {
+          logLevel: level,
+        }),
         args
       );
     });
-  }
-
-  public toConsole(level: LogLevel, args: any[]) {
-    /** @see {link https://console.spec.whatwg.org/#log} */
-    const logReplacement: Record<string, string> = {
-      string: "%s",
-      object: "%o",
-      number: "%f",
-      function: "%O",
-    };
-    const color = this.getColor(level);
-    const prepend = this.getPrepend(level);
-    const res: string[] = [];
-    args.forEach((arg) => {
-      res.push(logReplacement[typeof arg] ?? "%s");
-    });
-
-    if (env === "browser") {
-      /**
-       * @see https://developer.mozilla.org/en-US/docs/Web/API/console#specifications
-       */
-      console.log(`%c${prepend}: ${res.join(" ")}`, `color: ${color}`, ...args);
-    } else {
-      /**
-       * @see https://handwiki.org/wiki/ANSI_escape_code
-       */
-      console.log(`${color}${prepend}: ${res.join(" ")}${END_ANSI}`, ...args);
-    }
   }
 }
