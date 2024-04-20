@@ -1,4 +1,5 @@
 import { LogLevel, DEFAULT_LEVEL } from "./config";
+import { validate } from "./utils";
 
 /**
  * all plugins should fulfill these properties and methods
@@ -6,8 +7,14 @@ import { LogLevel, DEFAULT_LEVEL } from "./config";
 export abstract class BaseLogger {
   constructor(public readonly config: Config = { label: "", level: DEFAULT_LEVEL }) {}
 
-  public abstract setLevel(level: LogLevel): void;
-  public abstract setLabel(label: string): void;
+  @validate
+  public setLevel(level: LogLevel): void {
+    this.config.level = level;
+  }
+  @validate
+  public setLabel(label: string): void {
+    this.config.label = label;
+  }
 
   public abstract warn(..._: any[]): void;
   public abstract log(..._: any[]): void;

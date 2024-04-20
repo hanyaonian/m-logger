@@ -1,37 +1,25 @@
 import { BaseLogger } from "../base";
-import { validate, use } from "./decorators";
 import { LogLevel, LOG_COLOR, LOG_DESC } from "../config";
 
 export class Console extends BaseLogger {
-  public level?: LogLevel;
-  public label?: string;
-
-  public setLevel(level: LogLevel) {
-    this.level = level;
+  public warn(...args: any[]) {
+    this.toConsole(LogLevel.warn, args);
   }
 
-  public setLabel(label?: string) {
-    this.label = label;
+  public log(...args: any[]) {
+    this.toConsole(LogLevel.all, args);
   }
 
-  @validate
-  @use(LogLevel.warn)
-  public warn(..._: any[]) {}
+  public error(...args: any[]) {
+    this.toConsole(LogLevel.error, args);
+  }
 
-  @validate
-  @use(LogLevel.all)
-  public log(..._: any[]) {}
-
-  @validate
-  @use(LogLevel.error)
-  public error(..._: any[]) {}
-
-  @validate
-  @use(LogLevel.info)
-  public info(..._: any[]) {}
+  public info(...args: any[]) {
+    this.toConsole(LogLevel.info, args);
+  }
 
   public getPrepend(level: LogLevel) {
-    return this.label ? `[${this.label}]-${LOG_DESC[level]}` : LOG_DESC[level];
+    return this.config.label ? `[${this.config.label}]-${LOG_DESC[level]}` : LOG_DESC[level];
   }
 
   public getColor(level: LogLevel) {

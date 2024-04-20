@@ -1,6 +1,6 @@
 import { LogLevel } from "./config";
-import { usePlugins, useInterceptor } from "./utils";
 import { Config, BaseLogger, Interceptor } from "./base";
+import { usePlugins, useInterceptor, validate, filter } from "./utils";
 // default plugins
 import { Console } from "./console";
 
@@ -28,26 +28,28 @@ export class Logger extends BaseLogger {
     }
   }
 
-  @usePlugins()
-  public setLevel(_level: LogLevel) {}
-
-  @usePlugins()
-  public setLabel(_label?: string) {}
-
-  @usePlugins()
+  @validate
   @useInterceptor(LogLevel.warn)
+  @filter(LogLevel.warn)
+  @usePlugins
   public warn(..._: any[]) {}
 
-  @usePlugins()
+  @validate
   @useInterceptor(LogLevel.all)
+  @filter(LogLevel.all)
+  @usePlugins
   public log(..._: any[]) {}
 
-  @usePlugins()
+  @validate
   @useInterceptor(LogLevel.error)
+  @filter(LogLevel.error)
+  @usePlugins
   public error(..._: any[]) {}
 
-  @usePlugins()
+  @validate
   @useInterceptor(LogLevel.info)
+  @filter(LogLevel.info)
+  @usePlugins
   public info(..._: any[]) {}
 
   public useInterceptor(level: LogLevel, args: any[]) {

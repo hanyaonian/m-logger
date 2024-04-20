@@ -4,13 +4,7 @@ A simple log tracer for browser development. It's a practice for decorators(expe
 
 (btw, I found ChatGPT can easily do better than this, T T)
 
-## install
-
-```sh
-npm install m-web-logger
-```
-
-## log types & default setting
+## Log types & default setting
 
 m-logger has 5 levels, you can pass it by url params, default is **slient**. If the reported info's level is weaker than level you set, it would be ignored.
 
@@ -36,34 +30,40 @@ For example: **{your-web-location}?log_level=${level}**. you can change default 
 
 you can also filter log info by `label_filter`
 
-## basic usage
+## Usage
 
-A web-logger contains 2 default functions, and other similar custom functions you want:
+Install via npm
+
+```sh
+npm install m-web-logger
+```
+
+It contains 2 default functions, and other similar custom functions you want:
 
 - Console (log your info into browser's developer console)
 - Tracer (saved in browser's indexeddb, todo)
-- custom plugins, extends BaseLogger.
+- custom plugins, extends `BaseLogger`.
 
-- ### create a logger
+- ### Create a instance
 
   ```js
-  // es module
+  // for esm
   import { Logger, LogLevel } from "m-web-logger";
 
-  // umd from browser window
+  // for umd
   const { MLogger } = window;
   const { Logger, LogLevel } = MLogger;
 
   // default usage
   const logger = new Logger();
-  // or pass label or level to it
+  // with a label or level
   const logger1 = new Logger({
     label: "some-module",
     level: LogLevel.warn,
   });
   ```
 
-- ### basic use
+- ### Basic
 
   ```js
   logger.log(1);
@@ -78,62 +78,18 @@ A web-logger contains 2 default functions, and other similar custom functions yo
   logger.error(1, 2, 3, obj);
   ```
 
-- ### setting a label for bug trace
+- ### Extra Usage
 
-  you can define a label for more-specific log information.
+  [ref see](./docs/extra.md)
 
-  ```js
-  logger.setLabel("define-label");
-  logger.log(obj);
-  logger.info(1, obj);
-  logger.warn(1, 2, obj);
-  logger.error(1, 2, 3, obj);
-  ```
-
-- ### setting level for filter
-
-  you can change `log_level` url params or use `setLevel` method to filter log information.
-
-  ```js
-  // change the url params log to `error`
-  // or use setLevel
-  logger.setLevel(LogLevel.error);
-  logger.log(obj); // filtered
-  logger.info(1, obj); // filtered
-  logger.warn(1, 2, obj); // filtered
-  logger.error("after set-lelve, you can only see error log");
-  ```
-
-- ### Use Interceptor
-
-  you can use Interceptor function to get log event.
-
-  ```js
-  const logger1 = new Logger({
-    label: "interceptor-log",
-  });
-  const logger2 = new Logger({
-    label: "some-module",
-  });
-  // catch logger event here
-  Logger.useInterceptor((config, ...args) => {
-    const { instance, log_level } = config;
-    // get 'some-module' error-event
-    if (instance.label === "some-module" && log_level === LogLevel.error) {
-      logger1.warn("Interceptor get [some-module] error event. do something");
-    }
-  });
-  logger2.error("some error event;");
-  ```
-
-## development
+## Development
 
 ```sh
 # for browser
 npm run dev
 ```
 
-## build
+## Build
 
 ```sh
 npm run build

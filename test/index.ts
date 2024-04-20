@@ -53,7 +53,7 @@ Logger.useInterceptor((config, ...args) => {
 logger2.error("some error event;");
 
 /**
- * Supposed not to see any log except
+ * Supposed not to see any other log when
  * label_filter=labeltest
  */
-labelLogger.log("Supposed not to see any log except label_filter=test");
+labelLogger.log("Supposed not to see any other log, when label_filter=test");
