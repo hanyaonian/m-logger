@@ -1,5 +1,10 @@
 import { getEnv } from "./utils";
 
+export enum LogFilterKey {
+  level = "log_level",
+  label = "label_filter",
+}
+
 export enum LogLevel {
   all,
   info,
@@ -34,6 +39,6 @@ export const LOG_DESC: Record<LogLevel, string> = {
   [LogLevel.all]: "[log]",
 };
 
-export const DEFAULT_LEVEL =
-  LogLevel[getEnv("log_level") as keyof typeof LogLevel] ?? LogLevel.slient;
-export const LABEL_FILTER = getEnv("label_filter");
+// @ts-expect-error if not matched, default is slient
+export const DEFAULT_LEVEL: LogLevel = LogLevel[getEnv(LogFilterKey.level)] ?? LogLevel.slient;
+export const LABEL_FILTER = getEnv(LogFilterKey.label);
