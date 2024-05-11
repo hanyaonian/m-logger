@@ -13,16 +13,6 @@ export enum LogLevel {
   slient,
 }
 
-export const END_ANSI = "\x1B[0m";
-
-export const NODE_LOG_ANSI: Record<LogLevel, string> = {
-  [LogLevel.slient]: "",
-  [LogLevel.error]: "\x1B[31m",
-  [LogLevel.warn]: "\x1B[33m",
-  [LogLevel.info]: "\x1B[34m",
-  [LogLevel.all]: "\x1B[32m",
-};
-
 export const LOG_COLOR: Record<LogLevel, string> = {
   [LogLevel.slient]: "",
   [LogLevel.error]: "red",

@@ -22,28 +22,22 @@ export class Console extends BaseLogger {
     return this.config.label ? `[${this.config.label}]-${LOG_DESC[level]}` : LOG_DESC[level];
   }
 
-  public getColor(level: LogLevel) {
+  private getColor(level: LogLevel) {
     return LOG_COLOR[level];
   }
 
-  public toConsole(level: LogLevel, args: any[]) {
-    /** @see {link https://console.spec.whatwg.org/#log} */
+  /**
+   * @see {link https://console.spec.whatwg.org/#log}
+   * @see {link https://developer.mozilla.org/en-US/docs/Web/API/console#specifications}
+   */
+  private toConsole(level: LogLevel, args: any[]) {
     const logReplacement: Record<string, string> = {
       string: "%s",
       object: "%o",
       number: "%f",
       function: "%O",
     };
-    const color = this.getColor(level);
-    const prepend = this.getPrepend(level);
-    const res: string[] = [];
-    args.forEach((arg) => {
-      res.push(logReplacement[typeof arg] ?? "%s");
-    });
-
-    /**
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/console#specifications
-     */
-    console.log(`%c${prepend}: ${res.join(" ")}`, `color: ${color}`, ...args);
+    const info: string = args.map((arg) => logReplacement[typeof arg] ?? "%s").join(" ");
+    console.log(`%c${this.getPrepend(level)}: ${info}`, `color: ${this.getColor(level)}`, ...args);
   }
 }
