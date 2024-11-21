@@ -1,4 +1,4 @@
-import { getEnv } from "./utils";
+import { getArg } from "./utils";
 
 export enum LogLevel {
   all,
@@ -8,15 +8,10 @@ export enum LogLevel {
   slient,
 }
 
-export const END_ANSI = "\x1B[0m";
-
-export const NODE_LOG_ANSI: Record<LogLevel, string> = {
-  [LogLevel.slient]: "",
-  [LogLevel.error]: "\x1B[31m",
-  [LogLevel.warn]: "\x1B[33m",
-  [LogLevel.info]: "\x1B[34m",
-  [LogLevel.all]: "\x1B[32m",
-};
+export enum QueryKey {
+  level = "log_level",
+  filter = "label_filter",
+}
 
 export const LOG_COLOR: Record<LogLevel, string> = {
   [LogLevel.slient]: "",
@@ -35,5 +30,5 @@ export const LOG_DESC: Record<LogLevel, string> = {
 };
 
 export const DEFAULT_LEVEL =
-  LogLevel[getEnv("log_level") as keyof typeof LogLevel] ?? LogLevel.slient;
-export const LABEL_FILTER = getEnv("label_filter");
+  LogLevel[getArg(QueryKey.level) as keyof typeof LogLevel] ?? LogLevel.slient;
+export const DEFAULT_FILTER = getArg(QueryKey.filter);

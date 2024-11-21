@@ -1,32 +1,26 @@
 /**
- * @param key key in location-search or process env
+ * @param key key in location-search
  * @returns string-value
  */
-export function getEnv(key: string): string {
-  if (env === "browser") {
-    return new URLSearchParams(location.search).get(key) ?? "";
-  }
-  return (getArgv(key) || process.env[key] || "").trim();
+export function getArg(key: string): string {
+  return new URLSearchParams(location.search).get(key) ?? "";
 }
 
-const getArgv = (key: string) => {
-  const args = process.argv.slice(2);
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-    if (arg.startsWith("--")) {
-      const [argKey, value] = arg.split("=");
-      if (argKey.substring(2) === key) {
-        return value;
-      }
+/**
+ * @description get formatting specifiers
+ * @see {link https://console.spec.whatwg.org/#log}
+ * */
+export function getSpecifier(val: unknown) {
+  switch (typeof val) {
+    case "number": {
+      if (Number.isInteger(val)) return "%i";
+      return "%f";
     }
+    case "function":
+      return "%O";
+    case "object":
+      return "%o";
+    default:
+      return "%s";
   }
-  return null;
-};
-
-export const env = (function () {
-  if (typeof exports !== "undefined" && typeof module !== "undefined" && module.exports) {
-    return "node";
-  } else {
-    return "browser";
-  }
-})();
+}

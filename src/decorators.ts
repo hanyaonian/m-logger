@@ -1,4 +1,4 @@
-import { DEFAULT_LEVEL, LABEL_FILTER, LogLevel } from "./config";
+import { DEFAULT_LEVEL, LogLevel } from "./config";
 import { Logger } from "./logger";
 
 /**
@@ -9,7 +9,7 @@ import { Logger } from "./logger";
  */
 
 export function validate(
-  target: Logger,
+  _target: Logger,
   propertyName: string,
   descriptor: TypedPropertyDescriptor<(...args: any[]) => void>
 ) {
@@ -30,9 +30,16 @@ export function use(level: LogLevel) {
   ) {
     const method = descriptor.value;
     descriptor.value = function (this: Logger, ...args: any[]) {
-      const hasLabelFilter = Boolean(LABEL_FILTER);
+      const hasLabelFilter = Boolean(Logger.filter);
       const matchLevel = (this.level ?? DEFAULT_LEVEL) <= level;
-      const matchLabel = LABEL_FILTER === this.label;
+      const matchLabel = (() => {
+        if (typeof Logger.filter === "string") {
+          return this.label?.includes(Logger.filter);
+        }
+        if (typeof Logger.filter === "function") {
+          return Logger.filter(this.config ?? {}, ...args);
+        }
+      })();
       if ((matchLevel && !hasLabelFilter) || (matchLevel && matchLabel)) {
         this.toConsole(level, args);
         this.useInterceptor(level, args);

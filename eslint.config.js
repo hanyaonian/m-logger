@@ -1,5 +1,4 @@
 // @ts-check
-// @see https://typescript-eslint.io/getting-started/typed-linting/monorepos
 // @see https://typescript-eslint.io/packages/typescript-eslint/#usage-with-other-plugins
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
@@ -18,7 +17,7 @@ module.exports = tseslint.config(
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: "./tsconfig.eslint.json",
+        project: ["./tsconfig.eslint.json", "./tsconfig.json"],
         // import.meta.dirname is only present for ESM files in Node.js >=20.11.0 / >= 21.2.0.
         // For CommonJS modules and/or older versions of Node.js, use __dirname or an alternative.
         tsconfigRootDir: __dirname,

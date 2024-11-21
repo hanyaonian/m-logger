@@ -1,8 +1,8 @@
 # m-web-logger
 
-A simple logger util for browser/nodejs development. It's a practice for decorators(experimental) in TypeScript.
+A simple logger util for web development (browser-only).
 
-(btw, I found ChatGPT can easily do better than this, T T)
+A practice for decorators(experimental) in TypeScript. (ChatGPT can easily do better than this, sad story)
 
 ## install
 
@@ -12,9 +12,9 @@ npm install m-web-logger
 
 ## Log types & default setting
 
-m-logger has 5 levels, you can pass it by url params or by node argv, default is **slient**.
+m-logger has 5 levels, you can pass it by url query parameter, default is **slient**.
 
-log level values are below:
+log levels are below:
 
 - `slient`: no log (for production)
 - `error`: only error log
@@ -24,37 +24,19 @@ log level values are below:
 
 you can also change the level by setting each logger instance, or use label filter.
 
-Priority comparison: label filter > instance's level > default log level
+Priority comparison: global filter > label filter > instance's level > default log level
 
-### Browser setting
+### Setting
 
-you can check browser demo by `npm run dev`.
+Check browser demo by `npm run dev`.
 
 browser's log level setting is controlled by url query parameter `log_level`.
 
 For example: **{your-web-location}?log_level=${level}**. you can change default level by change `level`
 
-you can also filter log info by `label_filter`
+you can also filter log info by url query parameter `label_filter`, this will filter some logs, and only output the logs that contain the filter string in the label.
 
-### Nodejs setting
-
-you can check Nodejs demo by `npm run test`.
-
-Node.js's log setting is controlled by `process.env` or `process.argv`
-
-For example:
-
-```sh
-set label_filter=${label}
-set log_level=${level}
-node your_script.js
-
-# or
-node your_script.js --label_filter=${label}
-node your_script.js --log_level=${level}
-```
-
-## basic usage
+## Usage
 
 - ### create a logger
 
@@ -63,8 +45,8 @@ node your_script.js --log_level=${level}
   import { Logger, LogLevel } from "m-web-logger";
 
   // umd from browser window
-  const { MLogger } = window;
-  const { Logger, LogLevel } = MLogger;
+  // const { MLogger } = window;
+  // const { Logger, LogLevel } = MLogger;
 
   // default usage
   const logger = new Logger();
@@ -116,6 +98,27 @@ node your_script.js --log_level=${level}
   logger.error("after set-lelve, you can only see error log");
   ```
 
+- ### Global Filter
+
+  ```js
+  /**
+   * global filter.
+   */
+  const filter_logger = new Logger({
+    label: "global-filter-log",
+  });
+
+  Logger.filter = (config, ...args) => {
+    if (config.label === "global-filter-log") {
+      return true;
+    }
+    return false;
+  };
+
+  filter_logger.log("I can log");
+  labelLogger.log("I can not");
+  ```
+
 - ### Use Interceptor
 
   you can use Interceptor function to get log event.
@@ -138,17 +141,14 @@ node your_script.js --log_level=${level}
   logger2.error("some error event;");
   ```
 
-## development
+## Development
 
 ```sh
 # for browser
 npm run dev
-
-# for nodejs, example
-npm run test -- --log=error
 ```
 
-## build
+## Build
 
 ```sh
 npm run build

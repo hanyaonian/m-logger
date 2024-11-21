@@ -1,2 +1,2 @@
 export { Logger } from "./logger";
-export { LogLevel } from "./config";
+export { LogLevel, QueryKey } from "./config";
