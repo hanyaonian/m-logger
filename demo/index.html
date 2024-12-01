@@ -79,8 +79,8 @@
     label: "some-module",
   });
   Logger.useInterceptor((config, ...args) => {
-    const { instance, level } = config;
-    if (instance.label === "some-module" && level === LogLevel.error) {
+    const { label, level } = config;
+    if (label === "some-module" && level === LogLevel.error) {
       logger1.warn("Interceptor get [some-module] error event. do something. args:", args);
     }
   });
@@ -88,7 +88,7 @@
 
   /**
    * Supposed not to see any log except
-   * label_filter=labeltest
+   * url query: label_filter=labeltest
    */
   labelLogger.log("Supposed not to see any log except label_filter=test");
 
@@ -106,8 +106,8 @@
     return false;
   }
 
+  logger.log('I can not log');
   filter_logger.log('I can log');
-  labelLogger.log('I can not');
 </script>
 
 </html>

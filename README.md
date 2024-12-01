@@ -1,6 +1,8 @@
 # m-web-logger
 
-A simple logger util for web development (browser-only).
+A simple & colored logger util for web development (browser-only).
+
+![screenshot](/assets/screenshot.png)
 
 A practice for decorators(experimental) in TypeScript. (ChatGPT can easily do better than this, sad story)
 
@@ -103,7 +105,9 @@ you can also filter log info by url query parameter `label_filter`, this will fi
   ```js
   /**
    * global filter.
+   * filter: (config: Config, ...args: any[]) => boolean;
    */
+  const logger = new Logger();
   const filter_logger = new Logger({
     label: "global-filter-log",
   });
@@ -115,8 +119,8 @@ you can also filter log info by url query parameter `label_filter`, this will fi
     return false;
   };
 
+  logger.log("I can not log");
   filter_logger.log("I can log");
-  labelLogger.log("I can not");
   ```
 
 - ### Use Interceptor
@@ -124,6 +128,7 @@ you can also filter log info by url query parameter `label_filter`, this will fi
   you can use Interceptor function to get log event.
 
   ```js
+  // interceptor: (config: Config, ...args: any[]) => boolean;
   const logger1 = new Logger({
     label: "interceptor-log",
   });
@@ -132,9 +137,9 @@ you can also filter log info by url query parameter `label_filter`, this will fi
   });
   // catch logger event here
   Logger.useInterceptor((config, ...args) => {
-    const { instance, level } = config;
+    const { label, level } = config;
     // get 'some-module' error-event
-    if (instance.label === "some-module" && level === LogLevel.error) {
+    if (label === "some-module" && level === LogLevel.error) {
       logger1.warn("Interceptor get [some-module] error event. do something");
     }
   });
