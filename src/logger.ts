@@ -1,29 +1,17 @@
-import { LogLevel, LOG_COLOR, LOG_DESC, DEFAULT_LEVEL, DEFAULT_FILTER } from "./config";
+import { LogLevel, LOG_COLOR, LOG_DESC, DEFAULT_LEVEL, DEFAULT_FILTER, Config } from "./config";
 import { validate, use } from "./decorators";
 import { getSpecifier } from "./utils";
 
-export type Config = {
-  level?: LogLevel;
-  label?: string;
-};
-
-type Interceptor = (
-  T: {
-    instance: Logger;
-    level: LogLevel;
-  },
-  args: any[]
-) => void;
-
-type FilterFunc = string | ((config: Config, ...args: any[]) => boolean);
+type Interceptor = (config: Config, args: any[]) => void;
+type FilterFunc = (config: Config, ...args: any[]) => boolean;
 
 export class Logger {
   public static interceptors: Interceptor[] = [];
   public static filter: FilterFunc = DEFAULT_FILTER;
 
-  public get level() {
-    return this.config?.level ?? DEFAULT_LEVEL;
-  }
+  public level: LogLevel = Object.values(LogLevel).includes(this.config.level!)
+    ? this.config.level!
+    : DEFAULT_LEVEL;
 
   public get label() {
     return this.config?.label;
@@ -70,16 +58,10 @@ export class Logger {
     return this.label ? `[${this.label}]-${LOG_DESC[level]}` : LOG_DESC[level];
   }
 
-  public useInterceptor(level: LogLevel, args: any[]) {
+  public useInterceptor(args: any[]) {
     // use Interceptors
     Logger.interceptors?.forEach((func) => {
-      func(
-        {
-          instance: this,
-          level: level,
-        },
-        args
-      );
+      func(this.config, args);
     });
   }
 

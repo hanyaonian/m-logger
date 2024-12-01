@@ -1,5 +1,10 @@
 import { getArg } from "./utils";
 
+export type Config = {
+  level?: LogLevel;
+  label?: string;
+};
+
 export enum LogLevel {
   all,
   info,
@@ -31,4 +36,10 @@ export const LOG_DESC: Record<LogLevel, string> = {
 
 export const DEFAULT_LEVEL =
   LogLevel[getArg(QueryKey.level) as keyof typeof LogLevel] ?? LogLevel.slient;
-export const DEFAULT_FILTER = getArg(QueryKey.filter);
+
+export const DEFAULT_FILTER = (() => {
+  const urlQuerySetting = getArg(QueryKey.filter);
+  return (config: Config) => {
+    return (config.label ?? "").includes(urlQuerySetting);
+  };
+})();
