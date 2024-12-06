@@ -136,11 +136,11 @@ you can also filter log info by url query parameter `label_filter`, this will fi
     label: "some-module",
   });
   // catch logger event here
-  Logger.useInterceptor((config, ...args) => {
-    const { label, level } = config;
-    // get 'some-module' error-event
-    if (label === "some-module" && level === LogLevel.error) {
-      logger1.warn("Interceptor get [some-module] error event. do something");
+  Logger.useInterceptor((info, ...args) => {
+    const { config, call_level } = info;
+    const { label } = config;
+    if (label === "some-module" && call_level === LogLevel.error) {
+      logger1.warn("Interceptor get [some-module] error event. do something. args:", args);
     }
   });
   logger2.error("some error event;");

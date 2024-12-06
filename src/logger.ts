@@ -1,8 +1,14 @@
 import { LogLevel, LOG_COLOR, LOG_DESC, DEFAULT_LEVEL, DEFAULT_FILTER, Config } from "./config";
-import { validate, use } from "./decorators";
+import { validate, filter } from "./decorators";
 import { getSpecifier } from "./utils";
 
-type Interceptor = (config: Config, args: any[]) => void;
+type Interceptor = (
+  info: {
+    config: Config;
+    call_level: LogLevel;
+  },
+  args: any[]
+) => void;
 type FilterFunc = (config: Config, ...args: any[]) => boolean;
 
 export class Logger {
@@ -31,7 +37,7 @@ export class Logger {
   }
 
   public setLevel(level: LogLevel) {
-    this.config.level = level;
+    this.level = level;
   }
 
   public setLabel(label: string) {
@@ -39,35 +45,45 @@ export class Logger {
   }
 
   @validate
-  @use(LogLevel.warn)
-  public warn(..._: any[]) {}
-
-  @validate
-  @use(LogLevel.all)
-  public log(..._: any[]) {}
-
-  @validate
-  @use(LogLevel.error)
-  public error(..._: any[]) {}
-
-  @validate
-  @use(LogLevel.info)
-  public info(..._: any[]) {}
-
-  public getPrepend(level: LogLevel) {
-    return this.label ? `[${this.label}]-${LOG_DESC[level]}` : LOG_DESC[level];
+  @filter(LogLevel.warn)
+  public warn(...args: any[]) {
+    return this.print(LogLevel.warn, args);
   }
 
-  public useInterceptor(args: any[]) {
+  @validate
+  @filter(LogLevel.all)
+  public log(...args: any[]) {
+    return this.print(LogLevel.all, args);
+  }
+
+  @validate
+  @filter(LogLevel.error)
+  public error(...args: any[]) {
+    return this.print(LogLevel.error, args);
+  }
+
+  @validate
+  @filter(LogLevel.info)
+  public info(...args: any[]) {
+    return this.print(LogLevel.info, args);
+  }
+
+  public callHook(level: LogLevel, args: any[]) {
     // use Interceptors
     Logger.interceptors?.forEach((func) => {
-      func(this.config, args);
+      func(
+        {
+          call_level: level,
+          config: this.config,
+        },
+        args
+      );
     });
   }
 
-  public toConsole(level: LogLevel, args: any[]) {
+  private print(level: LogLevel, args: any[]) {
+    const prepend = this.label ? `[${this.label}]-${LOG_DESC[level]}` : LOG_DESC[level];
     const color = LOG_COLOR[level];
-    const prepend = this.getPrepend(level);
     const res: string[] = [];
     args.forEach((arg) => {
       res.push(getSpecifier(arg));

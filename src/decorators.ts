@@ -16,13 +16,13 @@ export function validate(
   const method = descriptor.value;
   descriptor.value = function (this: Logger, ...args: any[]) {
     if (!args?.length) {
-      throw new Error(`Missing required argument in function ${propertyName}.`);
+      console.error(`Missing required argument in ${propertyName}.`);
     }
     return method?.apply(this, args);
   };
 }
 
-export function use(level: LogLevel) {
+export function filter(level: LogLevel) {
   return function (
     _target: Logger,
     _propertyName: string,
@@ -34,8 +34,7 @@ export function use(level: LogLevel) {
       const matchLevel = this.level <= level;
       const matchLabel = Logger.filter(this.config ?? {}, ...args);
       if ((matchLevel && !hasLabelFilter) || (matchLevel && matchLabel)) {
-        this.toConsole(level, args);
-        this.useInterceptor(args);
+        this.callHook(level, args);
         return method?.apply(this, args);
       }
       return null;
