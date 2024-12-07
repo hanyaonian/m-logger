@@ -4,7 +4,9 @@ A simple & colored logger util for web development (browser-only).
 
 ![screenshot](/assets/screenshot.png)
 
-A practice for decorators(experimental) in TypeScript. (ChatGPT can easily do better than this, sad story)
+This is a practice for using decorators(experimental) in TypeScript and understanding Unit-Test (Jest).
+
+ChatGPT can easily write something better than this, sad story
 
 ## install
 
@@ -137,9 +139,9 @@ you can also filter log info by url query parameter `label_filter`, this will fi
   });
   // catch logger event here
   Logger.useInterceptor((info, ...args) => {
-    const { config, call_level } = info;
+    const { config, callLevel } = info;
     const { label } = config;
-    if (label === "some-module" && call_level === LogLevel.error) {
+    if (label === "some-module" && callLevel === LogLevel.error) {
       logger1.warn("Interceptor get [some-module] error event. do something. args:", args);
     }
   });

@@ -7,5 +7,5 @@
     "experimentalDecorators": true
   },
   "exclude": ["dist"],
-  "include": ["src/*.ts"]
+  "include": ["src/*.ts", "test/*.ts"]
 }

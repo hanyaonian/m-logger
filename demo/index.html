@@ -79,9 +79,9 @@
     label: "some-module",
   });
   Logger.useInterceptor((info, ...args) => {
-    const { config, call_level } = info;
+    const { config, callLevel } = info;
     const { label } = config;
-    if (label === "some-module" && call_level === LogLevel.error) {
+    if (label === "some-module" && callLevel === LogLevel.error) {
       logger1.warn("Interceptor get [some-module] error event. do something. args:", args);
     }
   });

@@ -34,12 +34,12 @@ export const LOG_DESC: Record<LogLevel, string> = {
   [LogLevel.all]: "[log]",
 };
 
-export const DEFAULT_LEVEL =
+export const GET_DEFAULT_LEVEL = () =>
   LogLevel[getArg(QueryKey.level) as keyof typeof LogLevel] ?? LogLevel.slient;
 
-export const DEFAULT_FILTER = (() => {
+export const GET_DEFAULT_FILTER = () => {
   const urlQuerySetting = getArg(QueryKey.filter);
   return (config: Config) => {
     return (config.label ?? "").includes(urlQuerySetting);
   };
-})();
+};

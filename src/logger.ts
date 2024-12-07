@@ -1,11 +1,18 @@
-import { LogLevel, LOG_COLOR, LOG_DESC, DEFAULT_LEVEL, DEFAULT_FILTER, Config } from "./config";
+import {
+  Config,
+  LogLevel,
+  LOG_COLOR,
+  LOG_DESC,
+  GET_DEFAULT_LEVEL,
+  GET_DEFAULT_FILTER,
+} from "./config";
 import { validate, filter } from "./decorators";
 import { getSpecifier } from "./utils";
 
 type Interceptor = (
   info: {
     config: Config;
-    call_level: LogLevel;
+    callLevel: LogLevel;
   },
   args: any[]
 ) => void;
@@ -13,17 +20,18 @@ type FilterFunc = (config: Config, ...args: any[]) => boolean;
 
 export class Logger {
   public static interceptors: Interceptor[] = [];
-  public static filter: FilterFunc = DEFAULT_FILTER;
+  public static filter: FilterFunc = GET_DEFAULT_FILTER();
 
-  public level: LogLevel = Object.values(LogLevel).includes(this.config.level!)
-    ? this.config.level!
-    : DEFAULT_LEVEL;
-
+  public level: LogLevel = GET_DEFAULT_LEVEL();
   public get label() {
     return this.config?.label;
   }
 
-  constructor(readonly config: Config = {}) {}
+  constructor(readonly config: Config = {}) {
+    this.level = Object.values(LogLevel).includes(this.config.level!)
+      ? this.config.level!
+      : GET_DEFAULT_LEVEL();
+  }
 
   public static useInterceptor(func: Interceptor) {
     Logger.interceptors.push(func);
@@ -73,7 +81,7 @@ export class Logger {
     Logger.interceptors?.forEach((func) => {
       func(
         {
-          call_level: level,
+          callLevel: level,
           config: this.config,
         },
         args
@@ -90,6 +98,6 @@ export class Logger {
     });
 
     // https://developer.mozilla.org/en-US/docs/Web/API/console#specifications
-    console.log(`%c${prepend}: ${res.join(" ")}`, `color: ${color}`, ...args);
+    return console.log(`%c${prepend}: ${res.join(" ")}`, `color: ${color}`, ...args);
   }
 }
