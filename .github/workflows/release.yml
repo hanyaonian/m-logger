@@ -24,11 +24,11 @@ jobs:
         run: npm run test
       - name: Patch
         run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          echo "user.name:  $(git log -1 --pretty=format:'%an')"
+          echo "user.email: $(git log -1 --pretty=format:'%ae')"
           npm version patch
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add .
-          git commit -m "chore: github-action patch"
           git push
       - name: Release
         run: npm publish --provenance --access public
