@@ -152,11 +152,11 @@ you can also filter log info by url query parameter `label_filter`, this will fi
 
 ```sh
 # for browser
-npm run dev
+pnpm dev
 ```
 
 ## Build
 
 ```sh
-npm run build
+pnpm build
 ```

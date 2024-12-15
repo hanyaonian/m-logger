@@ -1,9 +1,9 @@
 // @ts-check
 // @see https://typescript-eslint.io/packages/typescript-eslint/#usage-with-other-plugins
-const eslint = require("@eslint/js");
-const tseslint = require("typescript-eslint");
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
 
-module.exports = tseslint.config(
+export default tseslint.config(
   {
     // config with just ignores is the replacement for `.eslintignore`
     ignores: ["**/dist/**", "*.js", "*.mjs", "*.cjs"],
@@ -20,7 +20,7 @@ module.exports = tseslint.config(
         project: ["./tsconfig.eslint.json", "./tsconfig.json"],
         // import.meta.dirname is only present for ESM files in Node.js >=20.11.0 / >= 21.2.0.
         // For CommonJS modules and/or older versions of Node.js, use __dirname or an alternative.
-        tsconfigRootDir: __dirname,
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
