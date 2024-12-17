@@ -13,7 +13,7 @@ export default defineConfig({
       name: "MLogger",
       fileName: "index",
       formats: ["es", "umd"],
-      entry: resolve(import.meta.dirname, "src/index.ts"),
+      entry: resolve(__dirname, "src/index.ts"),
     },
     rollupOptions: {
       /** @see link https://rollupjs.org/guide/en/#preserveentrysignatures */
