@@ -11,6 +11,7 @@ export function getArg(key: string): string {
  * @see {link https://console.spec.whatwg.org/#log}
  * */
 export function getSpecifier(val: unknown) {
+  console.error(typeof val);
   switch (typeof val) {
     case "number": {
       if (Number.isInteger(val)) return "%i";

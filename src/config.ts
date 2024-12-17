@@ -5,6 +5,16 @@ export type Config = {
   label?: string;
 };
 
+export type Interceptor = (
+  info: {
+    config: Config;
+    callLevel: LogLevel;
+  },
+  args: any[]
+) => void;
+
+export type FilterFunc = (config: Config, ...args: any[]) => boolean;
+
 export enum LogLevel {
   all,
   info,

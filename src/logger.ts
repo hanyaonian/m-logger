@@ -1,22 +1,7 @@
-import {
-  Config,
-  LogLevel,
-  LOG_COLOR,
-  LOG_DESC,
-  GET_DEFAULT_LEVEL,
-  GET_DEFAULT_FILTER,
-} from "./config";
+import { LogLevel, LOG_COLOR, LOG_DESC, GET_DEFAULT_LEVEL, GET_DEFAULT_FILTER } from "./config";
 import { validate, filter } from "./decorators";
 import { getSpecifier } from "./utils";
-
-type Interceptor = (
-  info: {
-    config: Config;
-    callLevel: LogLevel;
-  },
-  args: any[]
-) => void;
-type FilterFunc = (config: Config, ...args: any[]) => boolean;
+import type { Config, Interceptor, FilterFunc } from "./config";
 
 export class Logger {
   public static interceptors: Interceptor[] = [];

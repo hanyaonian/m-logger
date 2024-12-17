@@ -15,7 +15,7 @@ export function validate(
 ) {
   const method = descriptor.value;
   descriptor.value = function (this: Logger, ...args: any[]) {
-    if (!args?.length) {
+    if (!args.length) {
       console.error(`Missing required argument in ${propertyName}.`);
     }
     return method?.apply(this, args);

@@ -19,11 +19,11 @@ jobs:
           npm install pnpm -g
           pnpm install
 
-      - name: Build
+      - name: Test Build
         run: pnpm run build
 
       - name: Run tests
-        run: pnpm test
+        run: pnpm test:coverage
 
       - name: Lint code
         run: pnpm lint

@@ -10,6 +10,7 @@
     "prepare": "husky",
     "dev": "vite",
     "test": "jest",
+    "test:coverage": "npm test -- --coverage",
     "lint": "eslint . --fix",
     "build": "vite build",
     "format": "prettier . --write",
