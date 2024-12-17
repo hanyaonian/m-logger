@@ -28,10 +28,6 @@ jobs:
       - name: Lint code
         run: pnpm lint
 
-  coverage:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
       - name: Upload code coverage
         uses: coverallsapp/github-action@master
         with:
