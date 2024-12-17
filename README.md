@@ -1,6 +1,11 @@
 # m-web-logger
 
-A simple & colored logger util for web development (browser-only).
+![Npm Verion](https://badgen.net/npm/v/m-web-logger)
+[![Coverage Status](https://coveralls.io/repos/github/hanyaonian/m-logger/badge.svg?branch=main)](https://coveralls.io/github/hanyaonian/m-logger?branch=main)
+![Build Status](https://badgen.net/github/checks/hanyaonian/m-logger/main?label=ci)
+![TypeScript](https://badgen.net/badge/icon/typescript?icon=typescript&label)
+
+A simple filtering logger util for web development (browser-only).
 
 ![screenshot](/assets/screenshot.png)
 
@@ -99,7 +104,7 @@ you can also filter log info by url query parameter `label_filter`, this will fi
   logger.log(obj); // filtered
   logger.info(1, obj); // filtered
   logger.warn(1, 2, obj); // filtered
-  logger.error("after set-lelve, you can only see error log");
+  logger.error("after set-level, you can only see error log");
   ```
 
 - ### Global Filter
