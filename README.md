@@ -7,7 +7,7 @@
 
 A simple filtering logger util for web development (browser-only).
 
-![screenshot](/assets/screenshot.png)
+![screenshot](https://github.com/hanyaonian/m-logger/blob/main/assets/screenshot.png?raw=true)
 
 This is a practice for using decorators(experimental) in TypeScript and understanding Unit-Test (Jest).
 
