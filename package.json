@@ -1,6 +1,6 @@
 {
   "name": "m-web-logger",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "logger util for web browser",
   "type": "module",
   "main": "dist/index.umd.js",
