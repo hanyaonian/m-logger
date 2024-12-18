@@ -21,9 +21,9 @@ jobs:
           npm install pnpm -g
           pnpm install
       - name: Build
-        run: pnpm run build
+        run: pnpm build
       - name: Testing script
-        run: pnpm run test
+        run: pnpm test
       - name: Patch
         run: |
           git config user.name 'github-actions[bot]'
@@ -35,4 +35,4 @@ jobs:
       - name: Release
         run: pnpm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.pnpm_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
