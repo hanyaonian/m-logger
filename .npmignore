@@ -1,6 +1,11 @@
 demo/
 node_modules/
 src/
+docs/
+
+.editorconfig
 .vscode/
 .husky/
-docs/
+
+./*.js
+./vite.config.ts

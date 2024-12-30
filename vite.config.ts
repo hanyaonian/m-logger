@@ -11,7 +11,10 @@ export default defineConfig({
     emptyOutDir: true,
     lib: {
       name: "MLogger",
-      fileName: "index",
+      fileName: (format) => {
+        if (["es", "esm"].includes(format)) return "index.mjs";
+        return `index.${format}.js`;
+      },
       formats: ["es", "umd"],
       entry: resolve(__dirname, "src/index.ts"),
     },
