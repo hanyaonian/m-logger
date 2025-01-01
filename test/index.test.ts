@@ -1,10 +1,11 @@
 // worked by "m-web-logger": "file:."
-import { Logger, LogLevel, QueryKey } from "m-web-logger";
-import type { Interceptor } from "m-web-logger";
+// import { Logger, LogLevel, QueryKey } from "m-web-logger";
+// import type { Interceptor } from "m-web-logger";
 
-// TODO: check why jest not support without experimentalDecorators
-// import { Logger, LogLevel, QueryKey } from "../src/index";
-// import type { Interceptor } from "../src/index";
+// jest not support without experimentalDecorators
+// solution: https://swc.rs/docs/configuration/compilation#jsctransformdecoratorversion
+import { Logger, LogLevel, QueryKey } from "../src/index";
+import type { Interceptor } from "../src/index";
 
 const changeSearchParams = (key: string, val: string) => {
   const [base] = window.location.href.split("?");

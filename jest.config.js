@@ -2,6 +2,9 @@
 
 const config = {
   verbose: true,
+  transform: {
+    "^.+\\.(t|j)sx?$": "@swc/jest",
+  },
   testEnvironment: "jsdom",
 };
 
