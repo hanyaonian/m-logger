@@ -3,8 +3,7 @@
     "strict": true,
     "target": "ES5",
     "outDir": "./dist",
-    "declaration": true,
-    "experimentalDecorators": true
+    "declaration": true
   },
   "exclude": ["dist"],
   "include": ["src/*.ts", "test/*.ts"]

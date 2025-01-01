@@ -9,7 +9,7 @@ A simple filtering logger util for web development (browser-only).
 
 ![screenshot](https://github.com/hanyaonian/m-logger/blob/main/assets/screenshot.png?raw=true)
 
-This is a practice for using decorators(experimental) in TypeScript and understanding Unit-Test (Jest).
+This is a practice for using decorators(both experimental & typescript 5.0) in TypeScript.
 
 ChatGPT can easily write something better than this, sad story
 
