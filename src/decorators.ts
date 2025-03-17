@@ -80,7 +80,7 @@ export function filter(level: LogLevel) {
       const matchLevel = this.level <= level;
       const matchLabel = Logger.filter(this.config ?? {}, ...args);
       if ((matchLevel && !hasLabelFilter) || (matchLevel && matchLabel)) {
-        this.callHook(level, args);
+        this.triggerInterceptors(level, args);
         return method?.apply(this, args);
       }
       return null;

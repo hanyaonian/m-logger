@@ -1,4 +1,4 @@
-import { getArg } from "./utils";
+import { getUrlQuery } from "./utils";
 
 export type Config = {
   level?: LogLevel;
@@ -45,11 +45,11 @@ export const LOG_DESC: Record<LogLevel, string> = {
 };
 
 export const GET_DEFAULT_LEVEL = () =>
-  LogLevel[getArg(QueryKey.level) as keyof typeof LogLevel] ?? LogLevel.slient;
+  LogLevel[getUrlQuery(QueryKey.level) as keyof typeof LogLevel] ?? LogLevel.slient;
 
 export const GET_DEFAULT_FILTER = () => {
-  const urlQuerySetting = getArg(QueryKey.filter);
   return (config: Config) => {
+    const urlQuerySetting = getUrlQuery(QueryKey.filter);
     return (config.label ?? "").includes(urlQuerySetting);
   };
 };

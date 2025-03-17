@@ -1,8 +1,12 @@
 import { LogLevel, LOG_COLOR, LOG_DESC, GET_DEFAULT_LEVEL, GET_DEFAULT_FILTER } from "./config";
 import { validate, filter } from "./decorators";
 import { getSpecifier } from "./utils";
+
 import type { Config, Interceptor, FilterFunc } from "./config";
 
+/**
+ * A demo project for learning decorator syntax and unit testing
+ */
 export class Logger {
   public static interceptors: Interceptor[] = [];
   public static filter: FilterFunc = GET_DEFAULT_FILTER();
@@ -18,10 +22,17 @@ export class Logger {
       : GET_DEFAULT_LEVEL();
   }
 
+  /**
+   * Adds an interceptor function to the list of interceptors.
+   * Interceptors can be used to modify or monitor behavior before or after a function is executed.
+   */
   public static useInterceptor(func: Interceptor) {
     Logger.interceptors.push(func);
   }
 
+  /**
+   * remove an interceptor function from the list of interceptors.
+   */
   public static removeInterceptor(func: Interceptor) {
     const index = Logger.interceptors.findIndex((f) => f === func);
     if (index >= 0) {
@@ -29,10 +40,16 @@ export class Logger {
     }
   }
 
+  /**
+   * change the trace level of an instance
+   */
   public setLevel(level: LogLevel) {
     this.level = level;
   }
 
+  /**
+   * change the label of an instance
+   */
   public setLabel(label: string) {
     this.config.label = label;
   }
@@ -61,7 +78,10 @@ export class Logger {
     return this.print(LogLevel.info, args);
   }
 
-  public callHook(level: LogLevel, args: any[]) {
+  /**
+   * trigger interceptors
+   */
+  public triggerInterceptors(level: LogLevel, args: any[]) {
     // use Interceptors
     Logger.interceptors?.forEach((func) => {
       func(
