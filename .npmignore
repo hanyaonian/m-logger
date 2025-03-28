@@ -2,10 +2,14 @@ demo/
 node_modules/
 src/
 docs/
+test/
+assets/
+coverage/
 
 .editorconfig
 .vscode/
 .husky/
+.github/
 
 ./*.js
 ./vite.config.ts
