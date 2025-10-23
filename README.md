@@ -155,9 +155,17 @@ you can also filter log info by url query parameter `label_filter`, this will fi
 
 ## Development
 
+require `pnpm`.
+
 ```sh
-# for browser
+# npm i pnpm -g
+pnpm i
+
+# open browser for test
 pnpm dev
+
+# test case
+pnpm test
 ```
 
 ## Build

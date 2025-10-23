@@ -2,9 +2,16 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import typescript from "@rollup/plugin-typescript";
 
+import { name } from "./package.json";
+
 export default defineConfig({
   server: {
     open: "/demo/index.html?log_level=all",
+  },
+  resolve: {
+    alias: {
+      [name]: resolve(__dirname, "src", "index.ts"),
+    },
   },
   build: {
     minify: true,

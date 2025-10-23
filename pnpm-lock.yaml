@@ -53,9 +53,6 @@ importers:
       lint-staged:
         specifier: ^15.2.2
         version: 15.2.11
-      m-web-logger:
-        specifier: file:.
-        version: 'file:'
       prettier:
         specifier: ^2.8.7
         version: 2.8.8
@@ -1986,9 +1983,6 @@ packages:
   lru-cache@6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
-
-  'm-web-logger@file:':
-    resolution: {directory: '', type: directory}
 
   make-dir@4.0.0:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
@@ -4903,8 +4897,6 @@ snapshots:
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
-
-  'm-web-logger@file:': {}
 
   make-dir@4.0.0:
     dependencies:

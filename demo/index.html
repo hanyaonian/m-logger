@@ -19,7 +19,7 @@
 </body>
 
 <script type="module">
-  import { Logger, LogLevel } from "../src/index";
+  import { Logger, LogLevel } from "m-web-logger";
 
   const select = document.getElementById("select");
   select.value = new URLSearchParams(location.search).get("log_level") ?? "";

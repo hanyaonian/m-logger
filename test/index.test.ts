@@ -1,14 +1,8 @@
-// worked by "m-web-logger": "file:."
-// lint issue: Unsafe assignment of xxx
-// import { Logger, LogLevel, QueryKey } from "m-web-logger";
-// import type { Interceptor } from "m-web-logger";
-
-// normal way
-import { Logger, LogLevel, QueryKey } from "src/index";
-import type { Interceptor } from "src/index";
+import { Logger, LogLevel, QueryKey } from "m-web-logger";
+import type { Interceptor } from "m-web-logger";
 
 // jest not support without experimentalDecorators
-// solution: https://swc.rs/docs/configuration/compilation#jsctransformdecoratorversion
+// solution: use swc, see https://swc.rs/docs/configuration/compilation#jsctransformdecoratorversion
 
 const changeSearchParams = (key: string, val: string) => {
   const [base] = window.location.href.split("?");
