@@ -9,6 +9,12 @@
   "files": [
     "/dist"
   ],
+  "engines": {
+    "node": ">=v18.20.0",
+    "pnpm": ">=8.15.5",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm"
+  },
   "scripts": {
     "prepare": "husky",
     "dev": "vite",
@@ -17,7 +23,8 @@
     "lint": "eslint . --fix",
     "build": "vite build",
     "format": "prettier . --write",
-    "prepublishOnly": "vite build"
+    "prepublishOnly": "vite build",
+    "preinstall": "npx only-allow pnpm"
   },
   "lint-staged": {
     "*.{js,jsx,tsx,ts,md,json}": "prettier --write",
