@@ -1,5 +1,4 @@
 import { Logger, LogLevel, QueryKey } from "m-web-logger";
-import type { Interceptor } from "m-web-logger";
 
 // jest not support without experimentalDecorators
 // solution: use swc, see https://swc.rs/docs/configuration/compilation#jsctransformdecoratorversion
@@ -24,9 +23,30 @@ const setURL = (url: string) => {
   window.location = location;
 };
 
-describe("Testing filter", () => {
-  const consoleMock = jest.spyOn(console, "log");
+const getMocks = () => {
+  const logMock = jest.spyOn(console, "log");
+  const infoMock = jest.spyOn(console, "info");
+  const warnMock = jest.spyOn(console, "warn");
+  const errorMock = jest.spyOn(console, "error");
 
+  const clearMocks = () => {
+    logMock.mockClear();
+    infoMock.mockClear();
+    warnMock.mockClear();
+    errorMock.mockClear();
+  };
+
+  return {
+    clearMocks,
+    logMock,
+    infoMock,
+    warnMock,
+    errorMock,
+  };
+};
+
+describe("Testing filter", () => {
+  const { logMock, infoMock, warnMock, errorMock, clearMocks } = getMocks();
   test("Filter by level with setting by constructor", () => {
     const logger = new Logger({
       level: LogLevel.error,
@@ -35,10 +55,11 @@ describe("Testing filter", () => {
     logger.info("info");
     logger.warn("warn");
     logger.error("error");
-    expect(consoleMock).toHaveBeenCalledTimes(1);
-    expect(consoleMock.mock.calls.at(-1)).toContain("error");
+    expect(logMock).toHaveBeenCalledTimes(0);
+    expect(warnMock).toHaveBeenCalledTimes(0);
+    expect(errorMock).toHaveBeenCalledTimes(1);
 
-    consoleMock.mockClear();
+    clearMocks();
   });
 
   test("Filter by url default setting", () => {
@@ -47,9 +68,9 @@ describe("Testing filter", () => {
     logger.log("log");
     logger.info("info");
     logger.error("error");
-    expect(consoleMock).toHaveBeenCalledTimes(1);
-    expect(consoleMock.mock.calls.at(-1)).toContain("error");
-    consoleMock.mockClear();
+    expect(logMock).toHaveBeenCalledTimes(0);
+    expect(errorMock).toHaveBeenCalledTimes(1);
+    clearMocks();
   });
 
   test("Filter by setting", () => {
@@ -58,104 +79,51 @@ describe("Testing filter", () => {
     logger.log("log");
     logger.info("info");
     logger.error("error");
-    expect(consoleMock).toHaveBeenCalledTimes(1);
-    expect(consoleMock.mock.calls.at(-1)).toContain("error");
-    consoleMock.mockClear();
+    expect(logMock).toHaveBeenCalledTimes(0);
+    expect(infoMock).toHaveBeenCalledTimes(0);
+    expect(errorMock).toHaveBeenCalledTimes(1);
+    clearMocks();
 
     // change level
     logger.setLevel(LogLevel.info);
     logger.error("error");
     logger.info("info");
     logger.warn("warn");
-    expect(consoleMock).toHaveBeenCalledTimes(3);
-    expect(consoleMock.mock.calls.at(-1)).toContain("warn");
+    expect(logMock).toHaveBeenCalledTimes(0);
+    expect(infoMock).toHaveBeenCalledTimes(1);
+    expect(warnMock).toHaveBeenCalledTimes(1);
+    expect(errorMock).toHaveBeenCalledTimes(1);
 
-    consoleMock.mockClear();
-  });
-});
-
-describe("Testing log filter's interceptor", () => {
-  const consoleMock = jest.spyOn(console, "log");
-  const logger1 = new Logger({
-    label: "interceptor-log",
-    level: LogLevel.all,
-  });
-  const logger2 = new Logger({
-    label: "some-module",
-    level: LogLevel.all,
-  });
-  let recorder = 0;
-  const interceptorFunc: Interceptor = (info) => {
-    const { config = {}, callLevel } = info;
-    const { label } = config;
-    if (label === "some-module" && callLevel === LogLevel.error) {
-      recorder += 1;
-    }
-  };
-  const trigger = () => {
-    recorder = 0;
-    logger1.error("some error here");
-    logger1.error("some info here");
-    logger2.info("some info there;");
-    // this would be captured
-    logger2.error("some error there;");
-  };
-
-  test("Add Interceptor", () => {
-    Logger.useInterceptor(interceptorFunc);
-    expect(Logger.interceptors.length).toBe(1);
-  });
-
-  test("Use Interceptor", () => {
-    trigger();
-    expect(recorder).toBe(1);
-    expect(consoleMock).toHaveBeenCalledTimes(4);
-    consoleMock.mockClear();
-  });
-
-  test("Remove Interceptor", () => {
-    Logger.removeInterceptor(interceptorFunc);
-    trigger();
-    expect(recorder).toBe(0);
-    expect(consoleMock).toHaveBeenCalledTimes(4);
-    expect(Logger.interceptors.length).toBe(0);
-    consoleMock.mockClear();
+    clearMocks();
   });
 });
 
 describe("Testing log filter's base methods", () => {
+  const { clearMocks } = getMocks();
   test("Logging", () => {
-    const consoleMock = jest.spyOn(console, "log");
+    const logMock = jest.spyOn(console, "log");
     const logger = new Logger({
       level: LogLevel.all,
     });
     const values = [1, 1.1, "1", { num: 1 }, () => 1];
     values.forEach((value, index) => {
       logger.log(value);
-      expect(consoleMock.mock.calls.at(index)).toContain(value);
+      expect(logMock.mock.calls.at(index)).toContain(value);
     });
-    consoleMock.mockClear();
+    clearMocks();
   });
 
   test("Set label", () => {
-    const consoleMock = jest.spyOn(console, "log");
+    const logMock = jest.spyOn(console, "log");
     const logger = new Logger({
       level: LogLevel.all,
     });
     const label = "custom-label";
-    logger.setLabel(label);
+    logger.setName(label);
     logger.log("log");
-    expect(logger.label).toBe(label);
-    expect(consoleMock.mock.calls.at(-1)?.at?.(0)).toContain(label);
+    expect(logger.name).toBe(label);
+    expect(logMock.mock.calls.at(-1)?.at?.(0)).toContain(label);
 
-    consoleMock.mockClear();
-  });
-
-  test("Arguments validation", () => {
-    const errorMock = jest.spyOn(console, "error");
-    const logger = new Logger({ level: LogLevel.all });
-    logger.log();
-    expect(errorMock).toHaveBeenCalledWith("Missing required argument in log.");
-    errorMock.mockClear();
+    clearMocks();
   });
 });

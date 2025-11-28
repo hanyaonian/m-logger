@@ -1,43 +1,37 @@
-import { LogLevel, LOG_COLOR, LOG_DESC, GET_DEFAULT_LEVEL, GET_DEFAULT_FILTER } from "./config";
-import { validate, filter } from "./decorators";
-import { getSpecifier } from "./utils";
+import { LogLevel } from "./types";
+import { LogEvent } from "./event";
+import { filter } from "./decorators";
+import {
+  getDefaultLogLevelSetting,
+  getDefaultLogFilter,
+  getDefaultPrepend,
+  getDefaultDataFormatter,
+} from "./config";
 
-import type { Config, Interceptor, FilterFunc } from "./config";
+import type { LoggerConfig, LoggerFilter, LoggerOptions } from "./types";
 
 /**
  * A demo project for learning decorator syntax and unit testing
  */
 export class Logger {
-  public static interceptors: Interceptor[] = [];
-  public static filter: FilterFunc = GET_DEFAULT_FILTER();
+  public static filter: LoggerFilter = getDefaultLogFilter();
 
-  public level: LogLevel = GET_DEFAULT_LEVEL();
-  public get label() {
-    return this.config?.label;
+  public level: LogLevel;
+  public get name() {
+    return this.config?.name;
   }
 
-  constructor(readonly config: Config = {}) {
+  constructor(
+    readonly config: LoggerConfig = {},
+    readonly options: LoggerOptions = {
+      console: console,
+      prepend: getDefaultPrepend,
+      formatData: getDefaultDataFormatter,
+    }
+  ) {
     this.level = Object.values(LogLevel).includes(this.config.level!)
       ? this.config.level!
-      : GET_DEFAULT_LEVEL();
-  }
-
-  /**
-   * Adds an interceptor function to the list of interceptors.
-   * Interceptors can be used to modify or monitor behavior before or after a function is executed.
-   */
-  public static useInterceptor(func: Interceptor) {
-    Logger.interceptors.push(func);
-  }
-
-  /**
-   * remove an interceptor function from the list of interceptors.
-   */
-  public static removeInterceptor(func: Interceptor) {
-    const index = Logger.interceptors.findIndex((f) => f === func);
-    if (index >= 0) {
-      Logger.interceptors.splice(index, 1);
-    }
+      : getDefaultLogLevelSetting();
   }
 
   /**
@@ -48,61 +42,61 @@ export class Logger {
   }
 
   /**
-   * change the label of an instance
+   * change the name of an instance
    */
-  public setLabel(label: string) {
-    this.config.label = label;
+  public setName(name: string) {
+    this.config.name = name;
   }
 
-  @validate
   @filter(LogLevel.warn)
   public warn(...args: any[]) {
-    return this.print(LogLevel.warn, args);
+    return this.print(new LogEvent(LogLevel.warn, this.name, args));
   }
 
-  @validate
   @filter(LogLevel.all)
   public log(...args: any[]) {
-    return this.print(LogLevel.all, args);
+    return this.print(new LogEvent(LogLevel.all, this.name, args));
   }
 
-  @validate
   @filter(LogLevel.error)
   public error(...args: any[]) {
-    return this.print(LogLevel.error, args);
+    return this.print(new LogEvent(LogLevel.error, this.name, args));
   }
 
-  @validate
   @filter(LogLevel.info)
   public info(...args: any[]) {
-    return this.print(LogLevel.info, args);
+    return this.print(new LogEvent(LogLevel.info, this.name, args));
+  }
+
+  @filter(LogLevel.all)
+  public trace(...args: any[]) {
+    const stack = this.createStack();
+    return this.print(new LogEvent(LogLevel.all, this.name, [stack].concat(args)));
+  }
+
+  private createStack(): string {
+    const stack: string = (new Error().stack ?? "").replace("Error\n", "");
+    const array: string[] = stack.split("\n");
+    array.splice(0, 3);
+    return array.join("\n");
   }
 
   /**
-   * trigger interceptors
+   * https://developer.mozilla.org/en-US/docs/Web/API/console#specifications
    */
-  public triggerInterceptors(level: LogLevel, args: any[]) {
-    // use Interceptors
-    Logger.interceptors?.forEach((func) => {
-      func(
-        {
-          callLevel: level,
-          config: this.config,
-        },
-        args
-      );
-    });
-  }
+  private print(event: LogEvent) {
+    const { logLevel: level, logData: data } = event;
 
-  private print(level: LogLevel, args: any[]) {
-    const prepend = this.label ? `[${this.label}]-${LOG_DESC[level]}` : LOG_DESC[level];
-    const color = LOG_COLOR[level];
-    const res: string[] = [];
-    args.forEach((arg) => {
-      res.push(getSpecifier(arg));
-    });
+    const prepend = this.options.prepend(event);
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/console#specifications
-    return console.log(`%c${prepend}: ${res.join(" ")}`, `color: ${color}`, ...args);
+    if (level === LogLevel.warn) {
+      return console.warn(`${prepend} `, ...this.options.formatData(data));
+    } else if (level === LogLevel.error) {
+      return console.error(`${prepend} `, ...this.options.formatData(data));
+    } else if (level === LogLevel.info) {
+      return console.info(`${prepend} `, ...this.options.formatData(data));
+    } else {
+      return console.log(`${prepend} `, ...this.options.formatData(data));
+    }
   }
 }

@@ -1,19 +1,15 @@
 # m-web-logger
 
-![Npm Verion](https://badgen.net/npm/v/m-web-logger)
+![Npm Version](https://badgen.net/npm/v/m-web-logger)
 [![Coverage Status](https://coveralls.io/repos/github/hanyaonian/m-logger/badge.svg?branch=main)](https://coveralls.io/github/hanyaonian/m-logger?branch=main)
 [![ci](https://github.com/hanyaonian/m-logger/actions/workflows/ci.yml/badge.svg)](https://github.com/hanyaonian/m-logger/actions/workflows/ci.yml)
 ![TypeScript](https://badgen.net/badge/icon/typescript?icon=typescript&label)
 
 A simple filtering logger util for web development (browser-only).
 
-![screenshot](https://github.com/hanyaonian/m-logger/blob/main/assets/screenshot.png?raw=true)
+Practice of TypeScript 5.0 decorators.
 
-This is a practice for using decorators(both experimental & typescript 5.0) in TypeScript.
-
-ChatGPT can easily write something better than this, sad story
-
-## install
+## Install
 
 ```sh
 npm install m-web-logger
@@ -21,17 +17,17 @@ npm install m-web-logger
 
 ## Log types & default setting
 
-m-logger has 5 levels, you can pass it by url query parameter, default is **slient**.
+m-logger has 5 levels, you can pass it by URL query parameter, default is **silent**.
 
 log levels are below:
 
-- `slient`: no log (for production)
+- `silent`: no log (for production)
 - `error`: only error log
 - `warn`: includes warning, error
 - `info`: includes warning, error, info
 - `all`: includes warning, error, info, log
 
-you can also change the level by setting each logger instance, or use label filter.
+You can also change the level by setting each logger instance, or use label filter.
 
 Priority comparison: global filter > label filter > instance's level > default log level
 
@@ -39,15 +35,15 @@ Priority comparison: global filter > label filter > instance's level > default l
 
 Check browser demo by `npm run dev`.
 
-browser's log level setting is controlled by url query parameter `log_level`.
+browser's log level setting is controlled by URL query parameter `log_level`.
 
-For example: **{your-web-location}?log_level=${level}**. you can change default level by change `level`
+For example: **{your-web-location}?log_level=${level}**. You can change the default level by changing the `level` parameter.
 
-you can also filter log info by url query parameter `label_filter`, this will filter some logs, and only output the logs that contain the filter string in the label.
+You can also filter log info by URL query parameter `log_name`, this will filter some logs, and only output the logs that contain the filter string in the label.
 
 ## Usage
 
-- ### create a logger
+- ### Create a logger
 
   ```js
   // es module
@@ -59,6 +55,7 @@ you can also filter log info by url query parameter `label_filter`, this will fi
 
   // default usage
   const logger = new Logger();
+
   // or pass label or level to it
   const logger1 = new Logger({
     label: "some-module",
@@ -66,7 +63,7 @@ you can also filter log info by url query parameter `label_filter`, this will fi
   });
   ```
 
-- ### basic use
+- ### Basic use
 
   ```js
   logger.log(1);
@@ -81,21 +78,9 @@ you can also filter log info by url query parameter `label_filter`, this will fi
   logger.error(1, 2, 3, obj);
   ```
 
-- ### setting a label for bug trace
+- ### Setting level for filter
 
-  you can define a label for more-specific log information.
-
-  ```js
-  logger.setLabel("define-label");
-  logger.log(obj);
-  logger.info(1, obj);
-  logger.warn(1, 2, obj);
-  logger.error(1, 2, 3, obj);
-  ```
-
-- ### setting level for filter
-
-  you can change `log` url params or use `setLevel` method to filter log information.
+  You can change `log` URL params or use `setLevel` method to filter log information.
 
   ```js
   // change the url params log to `error`
@@ -126,32 +111,63 @@ you can also filter log info by url query parameter `label_filter`, this will fi
     return false;
   };
 
-  logger.log("I can not log");
+  logger.log("I cannot log");
   filter_logger.log("I can log");
   ```
 
-- ### Use Interceptor
+- ### Custom Options
 
-  you can use Interceptor function to get log event.
+  You can customize logger behavior by passing `LoggerOptions` as the second parameter. This allows you to integrate with other logging services (like Sentry, LogRocket, etc.) or customize log formatting.
 
   ```js
-  // interceptor: (config: Config, ...args: any[]) => boolean;
-  const logger1 = new Logger({
-    label: "interceptor-log",
-  });
-  const logger2 = new Logger({
-    label: "some-module",
-  });
-  // catch logger event here
-  Logger.useInterceptor((info, ...args) => {
-    const { config, callLevel } = info;
-    const { label } = config;
-    if (label === "some-module" && callLevel === LogLevel.error) {
-      logger1.warn("Interceptor get [some-module] error event. do something. args:", args);
+  // Example: Integrate with Sentry
+  import * as Sentry from "@sentry/browser";
+
+  const customConsole = {
+    log: (...args) => {
+      console.log(...args);
+      Sentry.addBreadcrumb({ message: args.join(" "), level: "info" });
+    },
+    info: (...args) => {
+      console.info(...args);
+      Sentry.addBreadcrumb({ message: args.join(" "), level: "info" });
+    },
+    warn: (...args) => {
+      console.warn(...args);
+      Sentry.addBreadcrumb({ message: args.join(" "), level: "warning" });
+    },
+    error: (...args) => {
+      console.error(...args);
+      Sentry.captureException(new Error(args.join(" ")));
+    },
+  };
+
+  const logger = new Logger(
+    { name: "my-module", level: LogLevel.all },
+    {
+      console: customConsole,
+      prepend: (evt) => {
+        // Custom prepend format
+        return `[${evt.logName || "default"}]`;
+      },
+      formatData: (data) => {
+        // Custom data formatting
+        return data.map((item) => {
+          if (typeof item === "object") {
+            return JSON.stringify(item);
+          }
+          return item;
+        });
+      },
     }
-  });
-  logger2.error("some error event;");
+  );
   ```
+
+  **Options:**
+
+  - `console`: An object implementing `IConsole` interface with `log`, `info`, `warn`, `error` methods. Use this to integrate with other logging services.
+  - `prepend`: A function that receives `LogEvent` and returns a string to prepend to each log message.
+  - `formatData`: A function that receives the log data array and returns a formatted array.
 
 ## Development
 

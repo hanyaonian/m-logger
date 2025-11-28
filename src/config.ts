@@ -1,55 +1,33 @@
+import { LogLevel, QueryKey, LoggerConfig } from "./types";
 import { getUrlQuery } from "./utils";
+import { LogEvent } from "./event";
 
-export type Config = {
-  level?: LogLevel;
-  label?: string;
+export const getDefaultLogLevelSetting = () => {
+  return LogLevel[getUrlQuery(QueryKey.level) as keyof typeof LogLevel] ?? LogLevel.slient;
 };
 
-export type Interceptor = (
-  info: {
-    config: Config;
-    callLevel: LogLevel;
-  },
-  args: any[]
-) => void;
-
-export type FilterFunc = (config: Config, ...args: any[]) => boolean;
-
-export enum LogLevel {
-  all,
-  info,
-  warn,
-  error,
-  slient,
-}
-
-export enum QueryKey {
-  level = "log_level",
-  filter = "label_filter",
-}
-
-export const LOG_COLOR: Record<LogLevel, string> = {
-  [LogLevel.slient]: "",
-  [LogLevel.error]: "red",
-  [LogLevel.warn]: "orange",
-  [LogLevel.info]: "skyblue",
-  [LogLevel.all]: "gray",
-};
-
-export const LOG_DESC: Record<LogLevel, string> = {
-  [LogLevel.slient]: "",
-  [LogLevel.error]: "[error]",
-  [LogLevel.warn]: "[warn]",
-  [LogLevel.info]: "[info]",
-  [LogLevel.all]: "[log]",
-};
-
-export const GET_DEFAULT_LEVEL = () =>
-  LogLevel[getUrlQuery(QueryKey.level) as keyof typeof LogLevel] ?? LogLevel.slient;
-
-export const GET_DEFAULT_FILTER = () => {
-  return (config: Config) => {
+export const getDefaultLogFilter = () => {
+  return (config: LoggerConfig) => {
     const urlQuerySetting = getUrlQuery(QueryKey.filter);
-    return (config.label ?? "").includes(urlQuerySetting);
+    return (config.name ?? "").includes(urlQuerySetting);
   };
 };
+
+export const getDefaultPrepend = (() => {
+  const desc: Record<LogLevel, string> = {
+    [LogLevel.slient]: "",
+    [LogLevel.error]: "ERROR",
+    [LogLevel.warn]: "WARN",
+    [LogLevel.info]: "INFO",
+    [LogLevel.all]: "LOG",
+  };
+  return (evt: LogEvent) => {
+    const time = evt.logTime.toLocaleString();
+    const level = evt.logLevel;
+    return `[${time}] [${desc[level]}] ${evt.logName ? `[${evt.logName}]` : ""}`;
+  };
+})();
+
+export function getDefaultDataFormatter(data: unknown[]) {
+  return data;
+}

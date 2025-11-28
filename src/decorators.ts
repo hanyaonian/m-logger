@@ -1,4 +1,4 @@
-import { LogLevel } from "./config";
+import { LogLevel } from "./types";
 import { Logger } from "./logger";
 
 /**
@@ -62,25 +62,13 @@ type MethodsOfClass<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any ? T[K] : never;
 }[keyof T];
 
-export function validate(method: MethodsOfClass<Logger>, context: ClassMethodDecoratorContext) {
-  const { name } = context;
-  function replacement(this: Logger, ...args: any[]) {
-    if (!args.length) {
-      console.error(`Missing required argument in ${String(name)}.`);
-    }
-    return method?.apply(this, args);
-  }
-  return replacement;
-}
-
 export function filter(level: LogLevel) {
   return function (method: MethodsOfClass<Logger>, _context: ClassMethodDecoratorContext) {
     function replacement(this: Logger, ...args: any[]) {
-      const hasLabelFilter = Boolean(Logger.filter);
+      const hasFilter = Boolean(Logger.filter);
       const matchLevel = this.level <= level;
-      const matchLabel = Logger.filter(this.config ?? {}, ...args);
-      if ((matchLevel && !hasLabelFilter) || (matchLevel && matchLabel)) {
-        this.triggerInterceptors(level, args);
+      const matchLabel = Logger.filter(this.config, ...args);
+      if ((matchLevel && !hasFilter) || (matchLevel && matchLabel)) {
         return method?.apply(this, args);
       }
       return null;
