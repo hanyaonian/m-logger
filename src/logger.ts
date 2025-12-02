@@ -1,4 +1,4 @@
-import { LogLevel } from "./types";
+import { LogLevel } from "./enum";
 import { LogEvent } from "./event";
 import { filter } from "./decorators";
 import {
@@ -14,7 +14,14 @@ import type { LoggerConfig, LoggerFilter, LoggerOptions } from "./types";
  * A demo project for learning decorator syntax and unit testing
  */
 export class Logger {
-  public static filter: LoggerFilter = getDefaultLogFilter();
+  private static _filter?: LoggerFilter;
+
+  public static get filter(): LoggerFilter {
+    return this._filter ?? getDefaultLogFilter();
+  }
+  public static set filter(val: LoggerFilter | undefined) {
+    this._filter = val;
+  }
 
   public level: LogLevel;
   public get name() {
@@ -25,8 +32,8 @@ export class Logger {
     readonly config: LoggerConfig = {},
     readonly options: LoggerOptions = {
       console: console,
-      prepend: getDefaultPrepend,
-      formatData: getDefaultDataFormatter,
+      prepend: getDefaultPrepend(),
+      formatData: getDefaultDataFormatter(),
     }
   ) {
     this.level = Object.values(LogLevel).includes(this.config.level!)
@@ -85,18 +92,19 @@ export class Logger {
    * https://developer.mozilla.org/en-US/docs/Web/API/console#specifications
    */
   private print(event: LogEvent) {
-    const { logLevel: level, logData: data } = event;
+    const { logLevel: level } = event;
 
     const prepend = this.options.prepend(event);
+    const formattedData = this.options.formatData(event);
 
     if (level === LogLevel.warn) {
-      return console.warn(`${prepend} `, ...this.options.formatData(data));
+      return console.warn(`${prepend} `, ...formattedData);
     } else if (level === LogLevel.error) {
-      return console.error(`${prepend} `, ...this.options.formatData(data));
+      return console.error(`${prepend} `, ...formattedData);
     } else if (level === LogLevel.info) {
-      return console.info(`${prepend} `, ...this.options.formatData(data));
+      return console.info(`${prepend} `, ...formattedData);
     } else {
-      return console.log(`${prepend} `, ...this.options.formatData(data));
+      return console.log(`${prepend} `, ...formattedData);
     }
   }
 }

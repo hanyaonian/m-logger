@@ -99,9 +99,8 @@ describe("Testing filter", () => {
 });
 
 describe("Testing log filter's base methods", () => {
-  const { clearMocks } = getMocks();
+  const { logMock, clearMocks } = getMocks();
   test("Logging", () => {
-    const logMock = jest.spyOn(console, "log");
     const logger = new Logger({
       level: LogLevel.all,
     });

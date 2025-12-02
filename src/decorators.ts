@@ -1,4 +1,4 @@
-import { LogLevel } from "./types";
+import { LogLevel } from "./enum";
 import { Logger } from "./logger";
 
 /**

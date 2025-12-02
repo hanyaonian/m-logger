@@ -1,4 +1,5 @@
 import { LogEvent } from "./event";
+import { LogLevel } from "./enum";
 
 export type LoggerConfig = {
   level?: LogLevel;
@@ -8,7 +9,7 @@ export type LoggerConfig = {
 export type LoggerOptions = {
   console: IConsole;
   prepend: (evt: LogEvent) => string;
-  formatData: (data: unknown[]) => unknown[];
+  formatData: (evt: LogEvent) => unknown[];
 };
 
 export interface IConsole {
@@ -19,16 +20,3 @@ export interface IConsole {
 }
 
 export type LoggerFilter = (config: LoggerConfig, ...args: any[]) => boolean;
-
-export enum LogLevel {
-  all,
-  info,
-  warn,
-  error,
-  slient,
-}
-
-export enum QueryKey {
-  level = "log_level",
-  filter = "log_name",
-}

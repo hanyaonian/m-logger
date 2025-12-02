@@ -1,4 +1,4 @@
-import { LogLevel } from "./types";
+import { LogLevel } from "./enum";
 
 export class LogEvent {
   private time = new Date();

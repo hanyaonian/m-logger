@@ -113,6 +113,9 @@ You can also filter log info by URL query parameter `log_name`, this will filter
 
   logger.log("I cannot log");
   filter_logger.log("I can log");
+
+  // restore
+  Logger.filter = undefined;
   ```
 
 - ### Custom Options
