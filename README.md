@@ -153,9 +153,9 @@ You can also filter log info by URL query parameter `log_name`, this will filter
         // Custom prepend format
         return `[${evt.logName || "default"}]`;
       },
-      formatData: (data) => {
+      formatData: (evt) => {
         // Custom data formatting
-        return data.map((item) => {
+        return evt.data.map((item) => {
           if (typeof item === "object") {
             return JSON.stringify(item);
           }
@@ -170,7 +170,7 @@ You can also filter log info by URL query parameter `log_name`, this will filter
 
   - `console`: An object implementing `IConsole` interface with `log`, `info`, `warn`, `error` methods. Use this to integrate with other logging services.
   - `prepend`: A function that receives `LogEvent` and returns a string to prepend to each log message.
-  - `formatData`: A function that receives the log data array and returns a formatted array.
+  - `formatData`: A function that receives receives `LogEvent` and returns a formatted array (logging info).
 
 ## Development
 

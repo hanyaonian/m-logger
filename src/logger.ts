@@ -98,13 +98,13 @@ export class Logger {
     const formattedData = this.options.formatData(event);
 
     if (level === LogLevel.warn) {
-      return console.warn(`${prepend} `, ...formattedData);
+      return this.options.console.warn(`${prepend} `, ...formattedData);
     } else if (level === LogLevel.error) {
-      return console.error(`${prepend} `, ...formattedData);
+      return this.options.console.error(`${prepend} `, ...formattedData);
     } else if (level === LogLevel.info) {
-      return console.info(`${prepend} `, ...formattedData);
+      return this.options.console.info(`${prepend} `, ...formattedData);
     } else {
-      return console.log(`${prepend} `, ...formattedData);
+      return this.options.console.log(`${prepend} `, ...formattedData);
     }
   }
 }
