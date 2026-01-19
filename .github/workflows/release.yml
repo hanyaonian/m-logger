@@ -1,7 +1,17 @@
-name: patch
+name: release
 
 on:
   workflow_dispatch:
+    inputs:
+      version_type:
+        description: "Version type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
@@ -24,15 +34,15 @@ jobs:
         run: pnpm build
       - name: Testing script
         run: pnpm test
-      - name: Patch
+      - name: Release
+        run: pnpm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Version Update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           echo "user.name:  $(git log -1 --pretty=format:'%an')"
           echo "user.email: $(git log -1 --pretty=format:'%ae')"
-          pnpm version patch
+          pnpm version ${{ github.event.inputs.version_type }}
           git push
-      - name: Release
-        run: pnpm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
