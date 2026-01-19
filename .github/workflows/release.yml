@@ -32,17 +32,18 @@ jobs:
           pnpm install
       - name: Build
         run: pnpm build
-      - name: Testing script
+      - name: Testing
         run: pnpm test
-      - name: Release
-        run: pnpm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Version Update
+      - name: Update Version
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           echo "user.name:  $(git log -1 --pretty=format:'%an')"
           echo "user.email: $(git log -1 --pretty=format:'%ae')"
           pnpm version ${{ github.event.inputs.version_type }}
+      - name: Release
+        run: |
+          pnpm publish --access public
           git push
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
