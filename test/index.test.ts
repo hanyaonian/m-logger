@@ -14,16 +14,7 @@ const changeSearchParams = (key: string, val: string) => {
 };
 
 const setURL = (url: string) => {
-  const location: any = new URL(url);
-  Object.assign(location, {
-    assign: jest.fn(),
-    reload: jest.fn(),
-    replace: jest.fn(),
-  });
-  // @ts-expect-error see https://github.com/jestjs/jest/issues/890
-  delete window.location;
-  // eslint-disable-next-line
-  window.location = location;
+  window.location.href = url;
 };
 
 const getMocks = () => {

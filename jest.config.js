@@ -10,6 +10,7 @@ const config = {
     "^.+\\.(t|j)sx?$": "@swc/jest",
   },
   testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["./config/jest-setup.js"],
 };
 
 export default config;
